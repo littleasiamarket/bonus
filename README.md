@@ -1,2 +1,2 @@
 # bonus
-this is for bonus assets
+this is for bonus dukun jamet assets
