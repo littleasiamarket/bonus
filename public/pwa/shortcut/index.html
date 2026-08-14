@@ -52,6 +52,7 @@
   .panel { margin-top: 32px; width: 100%; max-width: 320px; }
 
   .btn {
+    display: block;
     width: 100%;
     padding: 15px 24px;
     border: none;
@@ -61,6 +62,7 @@
     font-size: 16px;
     font-weight: 700;
     font-family: inherit;
+    text-decoration: none;
     cursor: pointer;
     transition: opacity .15s;
   }
@@ -117,7 +119,7 @@
 <div class="wrap">
   <img class="logo" src="icons/icon-192.png" alt="">
   <h1>YouTube</h1>
-  <p class="subtitle">Add the shortcut to your home screen for one-tap access.</p>
+  <p class="subtitle" id="tagline">Add the shortcut to your home screen for one-tap access.</p>
 
   <div class="panel">
 
@@ -148,6 +150,12 @@
       <p class="subtitle" style="margin:0 auto">Close this page and open <b>YouTube</b> from your home screen.</p>
     </div>
 
+    <!-- 5. launched from the installed icon: heading to the target -->
+    <div id="state-launch" class="hidden">
+      <a class="btn" id="launch-link" href="https://www.youtube.com/">Open YouTube</a>
+      <p class="note">Opening YouTube&hellip;</p>
+    </div>
+
   </div>
 </div>
 
@@ -160,19 +168,24 @@
   var TARGET_URL = "https://www.youtube.com/";
 
   // How long to wait for `beforeinstallprompt` before falling back to manual steps.
-  var PROMPT_WAIT_MS = 2500;
+  var PROMPT_WAIT_MS = 500;
 
+  var STATES = ["loading", "install", "manual", "done", "launch"];
   var el = {
     loading: document.getElementById("state-loading"),
     install: document.getElementById("state-install"),
     manual:  document.getElementById("state-manual"),
     done:    document.getElementById("state-done"),
+    launch:  document.getElementById("state-launch"),
     btn:     document.getElementById("install-btn"),
-    steps:   document.getElementById("manual-steps")
+    steps:   document.getElementById("manual-steps"),
+    tagline: document.getElementById("tagline")
   };
 
+  var current = "loading";
   function show(name) {
-    ["loading", "install", "manual", "done"].forEach(function (key) {
+    current = name;
+    STATES.forEach(function (key) {
       el[key].classList.toggle("hidden", key !== name);
     });
   }
@@ -180,11 +193,16 @@
   var isStandalone =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.matchMedia("(display-mode: fullscreen)").matches ||
+    window.matchMedia("(display-mode: minimal-ui)").matches ||
     window.navigator.standalone === true;
 
   // Launched from the installed home-screen icon -> this is the shortcut doing
-  // its job. Go to the target and stop; none of the install UI applies.
+  // its job. Show a tappable link as a safety net (in case the automatic
+  // navigation is blocked), then go.
   if (isStandalone) {
+    el.tagline.textContent = "";
+    document.getElementById("launch-link").href = TARGET_URL;
+    show("launch");
     window.location.replace(TARGET_URL);
     return;
   }
@@ -196,32 +214,32 @@
   }
 
   var deferredPrompt = null;
-  var settled = false;
 
   // Chrome/Edge/Samsung fire this when the PWA meets the install criteria.
+  // It can arrive after our short timeout, so upgrade the UI whenever it lands.
   window.addEventListener("beforeinstallprompt", function (event) {
     event.preventDefault();   // suppress the browser's own mini-infobar
     deferredPrompt = event;
-    settled = true;
-    show("install");
+    if (current !== "done") show("install");
   });
 
   window.addEventListener("appinstalled", function () {
     deferredPrompt = null;
-    settled = true;
     show("done");
   });
 
+  // The ONLY thing that starts an install.
   el.btn.addEventListener("click", function () {
     if (!deferredPrompt) return;
     el.btn.disabled = true;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function (choice) {
-      deferredPrompt = null;
+    var prompt = deferredPrompt;
+    deferredPrompt = null;
+    prompt.prompt();
+    prompt.userChoice.then(function (choice) {
       if (choice && choice.outcome === "accepted") {
         show("done");
       } else {
-        // User backed out -- stay here so they can try again.
+        // User backed out -- stay here and explain how to do it by hand.
         showManual();
       }
     }).catch(showManual);
@@ -243,10 +261,11 @@
     show("manual");
   }
 
-  // No install event within the window: iOS Safari, desktop Firefox, or the app
-  // is already installed. Show manual steps -- still no navigation.
+  // No install event yet: iOS Safari, desktop Firefox, or already installed.
+  // Show manual steps -- still no navigation. If the event arrives later, the
+  // listener above swaps in the Install button.
   setTimeout(function () {
-    if (!settled) showManual();
+    if (current === "loading") showManual();
   }, PROMPT_WAIT_MS);
 })();
 </script>
