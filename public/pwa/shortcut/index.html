@@ -2,159 +2,253 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>YouTube Shortcut</title>
-<meta name="theme-color" content="#FF0000">
+<meta name="description" content="Install the YouTube shortcut on your home screen">
+<meta name="theme-color" content="#0f0f0f">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/icon.svg">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="YouTube">
 <style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     height: 100%;
     margin: 0;
     background: #0f0f0f;
     color: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
   .wrap {
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 24px;
-    box-sizing: border-box;
+    padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
   }
   .logo {
-    width: 88px; height: 88px;
-    border-radius: 20px;
-    margin-bottom: 20px;
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    box-shadow: 0 8px 28px rgba(255, 0, 0, .28);
   }
   h1 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 20px 0 6px;
   }
   .subtitle {
     font-size: 14px;
+    line-height: 1.5;
     color: #aaa;
-    margin: 0 0 28px;
+    margin: 0;
+    max-width: 300px;
   }
-  .spinner {
-    width: 32px; height: 32px;
-    margin: 0 auto 20px;
-    border: 3px solid #333;
-    border-top-color: #FF0000;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .panel { margin-top: 32px; width: 100%; max-width: 320px; }
+
   .btn {
-    display: inline-block;
-    padding: 12px 28px;
-    border-radius: 24px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
+    width: 100%;
+    padding: 15px 24px;
     border: none;
-  }
-  .btn-primary {
+    border-radius: 28px;
     background: #FF0000;
     color: #fff;
-    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity .15s;
   }
-  .btn-secondary {
-    background: transparent;
-    color: #aaa;
-    border: 1px solid #444;
+  .btn:active { opacity: .75; }
+  .btn:disabled { opacity: .5; cursor: default; }
+
+  .spinner {
+    width: 28px;
+    height: 28px;
+    margin: 6px auto;
+    border: 3px solid #2a2a2a;
+    border-top-color: #FF0000;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .steps {
+    text-align: left;
+    background: #1c1c1c;
+    border: 1px solid #2c2c2c;
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #ddd;
+  }
+  .steps b { color: #fff; }
+  .steps-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #888;
+    margin-bottom: 10px;
+  }
+  ol { margin: 0; padding-left: 20px; }
+
+  .note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: #777;
+    line-height: 1.5;
+  }
+  .check {
+    font-size: 44px;
+    line-height: 1;
+    color: #22c55e;
   }
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <img class="logo" src="icons/icon.svg" alt="YouTube shortcut icon">
-    <h1>YouTube Shortcut</h1>
-    <p class="subtitle">One tap to open YouTube</p>
+<div class="wrap">
+  <img class="logo" src="icons/icon-192.png" alt="">
+  <h1>YouTube</h1>
+  <p class="subtitle">Add the shortcut to your home screen for one-tap access.</p>
 
-    <!-- shown only while waiting to see if beforeinstallprompt will fire -->
-    <div id="loading-state">
+  <div class="panel">
+
+    <!-- 1. brief wait while we find out whether the browser will offer an install -->
+    <div id="state-loading">
       <div class="spinner"></div>
-      <p class="subtitle">Preparing install&hellip;</p>
     </div>
 
-    <!-- shown once we know whether install is available; page waits here for a tap -->
-    <div id="install-state" class="hidden">
-      <button class="btn btn-primary hidden" id="install-btn">Install App</button>
-      <br>
-      <button class="btn btn-secondary" id="continue-btn">Continue in browser</button>
+    <!-- 2. browser supports installing: real Install button -->
+    <div id="state-install" class="hidden">
+      <button class="btn" id="install-btn" type="button">Install</button>
+      <p class="note">Tap Install, then confirm <b>Add to Home screen</b> in the dialog.</p>
     </div>
+
+    <!-- 3. no automatic prompt available: manual instructions -->
+    <div id="state-manual" class="hidden">
+      <div class="steps">
+        <div class="steps-title">Install manually</div>
+        <ol id="manual-steps"></ol>
+      </div>
+      <p class="note">Already installed? Look for the <b>YouTube</b> icon on your home screen.</p>
+    </div>
+
+    <!-- 4. install accepted -->
+    <div id="state-done" class="hidden">
+      <div class="check">&#10003;</div>
+      <h1 style="font-size:18px;margin:12px 0 6px">Installed</h1>
+      <p class="subtitle" style="margin:0 auto">Close this page and open <b>YouTube</b> from your home screen.</p>
+    </div>
+
   </div>
+</div>
 
 <script>
+(function () {
+  "use strict";
+
+  // Where the installed shortcut sends the user. Only used when the app is
+  // launched from the home screen icon -- never from this install page.
   var TARGET_URL = "https://www.youtube.com/";
-  var PROMPT_WAIT_MS = 2000; // how long to wait for beforeinstallprompt before giving up on it
+
+  // How long to wait for `beforeinstallprompt` before falling back to manual steps.
+  var PROMPT_WAIT_MS = 2500;
+
+  var el = {
+    loading: document.getElementById("state-loading"),
+    install: document.getElementById("state-install"),
+    manual:  document.getElementById("state-manual"),
+    done:    document.getElementById("state-done"),
+    btn:     document.getElementById("install-btn"),
+    steps:   document.getElementById("manual-steps")
+  };
+
+  function show(name) {
+    ["loading", "install", "manual", "done"].forEach(function (key) {
+      el[key].classList.toggle("hidden", key !== name);
+    });
+  }
+
+  var isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.matchMedia("(display-mode: fullscreen)").matches ||
+    window.navigator.standalone === true;
+
+  // Launched from the installed home-screen icon -> this is the shortcut doing
+  // its job. Go to the target and stop; none of the install UI applies.
+  if (isStandalone) {
+    window.location.replace(TARGET_URL);
+    return;
+  }
+
+  // --- From here on we are on the install page. It NEVER navigates away. ---
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(function () {});
   }
 
-  function goToTarget() {
-    window.location.replace(TARGET_URL);
+  var deferredPrompt = null;
+  var settled = false;
+
+  // Chrome/Edge/Samsung fire this when the PWA meets the install criteria.
+  window.addEventListener("beforeinstallprompt", function (event) {
+    event.preventDefault();   // suppress the browser's own mini-infobar
+    deferredPrompt = event;
+    settled = true;
+    show("install");
+  });
+
+  window.addEventListener("appinstalled", function () {
+    deferredPrompt = null;
+    settled = true;
+    show("done");
+  });
+
+  el.btn.addEventListener("click", function () {
+    if (!deferredPrompt) return;
+    el.btn.disabled = true;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function (choice) {
+      deferredPrompt = null;
+      if (choice && choice.outcome === "accepted") {
+        show("done");
+      } else {
+        // User backed out -- stay here so they can try again.
+        showManual();
+      }
+    }).catch(showManual);
+  });
+
+  function showManual() {
+    var ua = navigator.userAgent;
+    var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+                (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var steps = isIOS
+      ? ["Open this page in <b>Safari</b>",
+         "Tap the <b>Share</b> button at the bottom",
+         "Choose <b>Add to Home Screen</b>",
+         "Tap <b>Add</b> to confirm"]
+      : ["Open the browser menu (<b>&#8942;</b>, top right)",
+         "Tap <b>Add to Home screen</b> or <b>Install app</b>",
+         "Tap <b>Install</b> to confirm"];
+    el.steps.innerHTML = steps.map(function (s) { return "<li>" + s + "</li>"; }).join("");
+    show("manual");
   }
 
-  var isStandalone =
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true;
-
-  if (isStandalone) {
-    // This IS the installed shortcut being launched: go straight to the target.
-    goToTarget();
-  } else {
-    // Otherwise this is the install page: stay put, do nothing until the user taps a button.
-    var loadingState = document.getElementById("loading-state");
-    var installState = document.getElementById("install-state");
-    var installBtn = document.getElementById("install-btn");
-    var continueBtn = document.getElementById("continue-btn");
-    var deferredPrompt = null;
-    var revealed = false;
-
-    function reveal() {
-      if (revealed) return;
-      revealed = true;
-      loadingState.classList.add("hidden");
-      installState.classList.remove("hidden");
-      if (deferredPrompt) installBtn.classList.remove("hidden");
-    }
-
-    window.addEventListener("beforeinstallprompt", function (event) {
-      event.preventDefault(); // stop the browser's own mini-infobar; we show our own button instead
-      deferredPrompt = event;
-      reveal();
-    });
-
-    // If beforeinstallprompt never fires (iOS Safari, desktop, already installed
-    // some other way), stop waiting and just offer the manual continue option.
-    // This only reveals the buttons -- it never navigates by itself.
-    setTimeout(reveal, PROMPT_WAIT_MS);
-
-    installBtn.addEventListener("click", function () {
-      if (!deferredPrompt) return;
-      installBtn.disabled = true;
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.finally(function () {
-        deferredPrompt = null;
-        goToTarget();
-      });
-    });
-
-    continueBtn.addEventListener("click", goToTarget);
-  }
+  // No install event within the window: iOS Safari, desktop Firefox, or the app
+  // is already installed. Show manual steps -- still no navigation.
+  setTimeout(function () {
+    if (!settled) showManual();
+  }, PROMPT_WAIT_MS);
+})();
 </script>
 </body>
 </html>
