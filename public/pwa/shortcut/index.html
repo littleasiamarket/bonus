@@ -82,15 +82,15 @@
     <h1>YouTube Shortcut</h1>
     <p class="subtitle">One tap to open YouTube</p>
 
-    <!-- shown while auto-redirecting -->
+    <!-- shown only while waiting to see if beforeinstallprompt will fire -->
     <div id="loading-state">
       <div class="spinner"></div>
-      <p class="subtitle">Opening&hellip;</p>
+      <p class="subtitle">Preparing install&hellip;</p>
     </div>
 
-    <!-- shown when an install prompt is available (first browser visit) -->
+    <!-- shown once we know whether install is available; page waits here for a tap -->
     <div id="install-state" class="hidden">
-      <button class="btn btn-primary" id="install-btn">Install App</button>
+      <button class="btn btn-primary hidden" id="install-btn">Install App</button>
       <br>
       <button class="btn btn-secondary" id="continue-btn">Continue in browser</button>
     </div>
@@ -98,7 +98,7 @@
 
 <script>
   var TARGET_URL = "https://www.youtube.com/";
-  var REDIRECT_DELAY_MS = 1200;
+  var PROMPT_WAIT_MS = 2000; // how long to wait for beforeinstallprompt before giving up on it
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(function () {});
@@ -112,28 +112,40 @@
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
 
-  var loadingState = document.getElementById("loading-state");
-  var installState = document.getElementById("install-state");
-  var installBtn = document.getElementById("install-btn");
-  var continueBtn = document.getElementById("continue-btn");
-
-  continueBtn.addEventListener("click", goToTarget);
-
   if (isStandalone) {
-    // Already installed as an app: skip the install offer, go straight through.
-    setTimeout(goToTarget, REDIRECT_DELAY_MS);
+    // This IS the installed shortcut being launched: go straight to the target.
+    goToTarget();
   } else {
+    // Otherwise this is the install page: stay put, do nothing until the user taps a button.
+    var loadingState = document.getElementById("loading-state");
+    var installState = document.getElementById("install-state");
+    var installBtn = document.getElementById("install-btn");
+    var continueBtn = document.getElementById("continue-btn");
     var deferredPrompt = null;
+    var revealed = false;
 
-    window.addEventListener("beforeinstallprompt", function (event) {
-      event.preventDefault();
-      deferredPrompt = event;
+    function reveal() {
+      if (revealed) return;
+      revealed = true;
       loadingState.classList.add("hidden");
       installState.classList.remove("hidden");
+      if (deferredPrompt) installBtn.classList.remove("hidden");
+    }
+
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault(); // stop the browser's own mini-infobar; we show our own button instead
+      deferredPrompt = event;
+      reveal();
     });
 
+    // If beforeinstallprompt never fires (iOS Safari, desktop, already installed
+    // some other way), stop waiting and just offer the manual continue option.
+    // This only reveals the buttons -- it never navigates by itself.
+    setTimeout(reveal, PROMPT_WAIT_MS);
+
     installBtn.addEventListener("click", function () {
-      if (!deferredPrompt) return goToTarget();
+      if (!deferredPrompt) return;
+      installBtn.disabled = true;
       deferredPrompt.prompt();
       deferredPrompt.userChoice.finally(function () {
         deferredPrompt = null;
@@ -141,11 +153,7 @@
       });
     });
 
-    // No install prompt fired within the window (unsupported browser, already
-    // dismissed, or desktop) -> just continue to the target automatically.
-    setTimeout(function () {
-      if (!deferredPrompt) goToTarget();
-    }, REDIRECT_DELAY_MS);
+    continueBtn.addEventListener("click", goToTarget);
   }
 </script>
 </body>
