@@ -18,39 +18,135 @@
     background: #0f0f0f;
     color: #fff;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap {
+    height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    padding: 24px;
+    box-sizing: border-box;
   }
-  .wrap { text-align: center; }
+  .logo {
+    width: 88px; height: 88px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: #aaa;
+    margin: 0 0 28px;
+  }
   .spinner {
-    width: 40px; height: 40px;
-    margin: 0 auto 16px;
-    border: 4px solid #333;
+    width: 32px; height: 32px;
+    margin: 0 auto 20px;
+    border: 3px solid #333;
     border-top-color: #FF0000;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  a { color: #FF0000; }
+  .btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: #FF0000;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: #aaa;
+    border: 1px solid #444;
+  }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="spinner"></div>
-    <p>Opening YouTube&hellip;</p>
-    <p><a href="https://www.youtube.com/" id="fallback-link">Tap here if not redirected</a></p>
+    <img class="logo" src="icons/icon.svg" alt="YouTube shortcut icon">
+    <h1>YouTube Shortcut</h1>
+    <p class="subtitle">One tap to open YouTube</p>
+
+    <!-- shown while auto-redirecting -->
+    <div id="loading-state">
+      <div class="spinner"></div>
+      <p class="subtitle">Opening&hellip;</p>
+    </div>
+
+    <!-- shown when an install prompt is available (first browser visit) -->
+    <div id="install-state" class="hidden">
+      <button class="btn btn-primary" id="install-btn">Install App</button>
+      <br>
+      <button class="btn btn-secondary" id="continue-btn">Continue in browser</button>
+    </div>
   </div>
 
 <script>
   var TARGET_URL = "https://www.youtube.com/";
+  var REDIRECT_DELAY_MS = 1200;
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(function () {});
   }
 
-  document.getElementById("fallback-link").href = TARGET_URL;
-  window.location.replace(TARGET_URL);
+  function goToTarget() {
+    window.location.replace(TARGET_URL);
+  }
+
+  var isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  var loadingState = document.getElementById("loading-state");
+  var installState = document.getElementById("install-state");
+  var installBtn = document.getElementById("install-btn");
+  var continueBtn = document.getElementById("continue-btn");
+
+  continueBtn.addEventListener("click", goToTarget);
+
+  if (isStandalone) {
+    // Already installed as an app: skip the install offer, go straight through.
+    setTimeout(goToTarget, REDIRECT_DELAY_MS);
+  } else {
+    var deferredPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      deferredPrompt = event;
+      loadingState.classList.add("hidden");
+      installState.classList.remove("hidden");
+    });
+
+    installBtn.addEventListener("click", function () {
+      if (!deferredPrompt) return goToTarget();
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(function () {
+        deferredPrompt = null;
+        goToTarget();
+      });
+    });
+
+    // No install prompt fired within the window (unsupported browser, already
+    // dismissed, or desktop) -> just continue to the target automatically.
+    setTimeout(function () {
+      if (!deferredPrompt) goToTarget();
+    }, REDIRECT_DELAY_MS);
+  }
 </script>
 </body>
 </html>
