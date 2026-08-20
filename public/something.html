@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Something</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      max-width: 560px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+    h1 { margin: 0 0 .5rem; font-size: 2.4rem; }
+    p { margin: .4rem 0; opacity: .92; line-height: 1.5; }
+    .badge {
+      display: inline-block;
+      margin-top: 1.4rem;
+      padding: .5rem 1rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.25);
+      font-size: .85rem;
+      letter-spacing: .5px;
+    }
+    button {
+      margin-top: 1.6rem;
+      border: 0;
+      border-radius: 12px;
+      padding: .8rem 1.6rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fff;
+      color: #2575fc;
+      transition: transform .15s ease;
+    }
+    button:hover { transform: translateY(-2px); }
+    #dice { font-size: 3rem; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hello 👋</h1>
+    <p>This is <strong>something.html</strong> — a placeholder page created to confirm files can be added to <code>bonus/public</code>.</p>
+    <p>If you can read this in your browser, the deploy worked.</p>
+    <div id="dice">🎲</div>
+    <button onclick="roll()">Roll a random number</button>
+    <p id="result"></p>
+    <div class="badge">served from /something.html</div>
+  </div>
+
+  <script>
+    function roll() {
+      const n = Math.floor(Math.random() * 100) + 1;
+      const faces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+      document.getElementById("dice").textContent =
+        faces[Math.floor(Math.random() * faces.length)];
+      document.getElementById("result").textContent = "You rolled: " + n;
+    }
+  </script>
+</body>
+</html>
