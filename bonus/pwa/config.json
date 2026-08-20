@@ -4,7 +4,7 @@
   "goal": "Membuat PWA untuk BONUS138: sebuah halaman bergaya Google Play Store yang bisa dipasang ke layar utama, dan ketika dibuka dari ikonnya langsung mengarah ke situs BONUS138.",
   "brand": "BONUS138",
   "language": "id",
-  "target_url": "https://bonus138kita.com/",
+  "target_url": "https://cutt.ly/7tz4uCGn",
   "theme_color": "#b8860b",
   "background_color": "#161310",
   "brand_colors": {
@@ -16,10 +16,6 @@
     "note": "Data brand (domain, warna) dari public/bonus.html. Ikon aplikasi dibuat dari logo BONUS138 yang diberikan user (disimpan di icons/logo-source.png).",
     "canonical_domain": "https://bonus138kita.com/",
     "icon_source": "icons/logo-source.png"
-  },
-  "reference_design": {
-    "url": "https://app.panen138shortcut.com/",
-    "note": "Desain di-reskin dari PANEN138 menjadi BONUS138. Semua teks bermerek panen138 diganti bonus138, ulasan ditulis ulang memuji BONUS138, seluruh teks berbahasa Indonesia."
   },
   "entry": "index.html",
   "files": {

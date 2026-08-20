@@ -5,10 +5,8 @@ Play Store yang bisa ditambahkan ke layar utama. Saat dibuka dari ikonnya,
 aplikasi berjalan *standalone* dan langsung mengarahkan ke situs BONUS138.
 
 - **Tujuan folder:** membuat PWA untuk BONUS138 (lihat `config.json`).
-- **Target buka:** `https://bonus138kita.com/`
+- **Target buka (login):** `https://cutt.ly/7tz4uCGn`
 - **Bahasa:** Indonesia
-- **Reskin dari:** referensi desain `https://app.panen138shortcut.com/` — seluruh
-  merek `panen138` diganti `bonus138`, ulasan ditulis ulang memuji BONUS138.
 
 ## Isi
 
@@ -22,14 +20,12 @@ aplikasi berjalan *standalone* dan langsung mengarahkan ke situs BONUS138.
 
 ## Cara pakai / deploy
 
-Repo ini disajikan Cloudflare Workers dari folder `./public`. Folder PWA ini
-berada di `bonus/pwa` (root repo), **di luar** `public/`. Agar tayang:
+Repo ini deploy ke Cloudflare Workers. Folder `bonus/` (termasuk `bonus/pwa`)
+disajikan oleh worker **bonus** — lihat `DEPLOY.md` & `wrangler.jsonc` di root
+repo. Setelah tayang, PWA ini berada di `/pwa/`.
 
-1. Salin/pindahkan folder ini ke dalam `public/` (mis. `public/pwa/`), **atau**
-2. Sesuaikan `wrangler.jsonc` agar menyertakan folder ini sebagai aset.
-
-Setelah tayang di HTTPS, buka halaman di ponsel (Chrome/Android atau Safari/iOS)
-lalu ketuk **Instal Cepat** → *Tambahkan ke Layar Utama*.
+Buka halaman di ponsel (Chrome/Android atau Safari/iOS) lalu ketuk
+**Instal Cepat** → *Tambahkan ke Layar Utama*.
 
 ## Mengganti target / ikon
 
