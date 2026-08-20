@@ -13,9 +13,9 @@
     "dark": "#161310"
   },
   "assets_source": {
-    "note": "Ikon & data brand diambil dari public/bonus.html pada repo ini.",
+    "note": "Data brand (domain, warna) dari public/bonus.html. Ikon aplikasi dibuat dari logo BONUS138 yang diberikan user (disimpan di icons/logo-source.png).",
     "canonical_domain": "https://bonus138kita.com/",
-    "logo_wordmark": "https://japantrip.vip/bonus138.webp"
+    "icon_source": "icons/logo-source.png"
   },
   "reference_design": {
     "url": "https://app.panen138shortcut.com/",
