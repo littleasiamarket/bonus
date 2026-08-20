@@ -1,26 +1,68 @@
 {
-  "name": "bonus",
-  "compatibility_date": "2026-06-07",
+  // ============================================================
+  //  Multi-worker config (one repo -> three Workers).
+  //
+  //  Each Worker serves a different folder as its static assets:
+  //
+  //    wrangler deploy --env public   ->  Worker "public"  serves ./public
+  //    wrangler deploy --env bonus    ->  Worker "bonus"   serves ./bonus
+  //    wrangler deploy --env halo     ->  Worker "halo"    serves ./halo
+  //
+  //  Shortcuts (see package.json):
+  //    npm run deploy:public | deploy:bonus | deploy:halo
+  //    npm run deploy:all      (deploys all three in sequence)
+  //
+  //  The top-level settings below are the defaults for the "public" worker;
+  //  the "env" blocks override name + assets folder for the others.
+  // ============================================================
 
-  // Worker script backing the PWA install counter at /api/install.
-  // Static assets are still served first; this only handles that one route.
+  "name": "public",
+  "compatibility_date": "2026-06-07",
   "main": "./src/index.js",
 
   "assets": {
     "directory": "./public",
     // Lets the Worker hand non-API requests back to the asset pipeline.
     "binding": "ASSETS"
-  }
+  },
 
-  // Storage for the install counter (optional; disabled until a KV namespace
-  // is bound). The Worker route /api/install returns a graceful 500 until then,
-  // and every static asset is served exactly as before.
-  //
-  // To enable the counter:
+  // Optional install-counter storage (disabled by default). To enable it for a
+  // given worker, create a namespace and add a matching kv_namespaces block
+  // (either top-level or inside that env):
   //   1. npx wrangler kv namespace create INSTALL_COUNTER
-  //   2. Uncomment the block below and paste the printed id.
-  //
-  // ,"kv_namespaces": [
-  //   { "binding": "INSTALL_COUNTER", "id": "PASTE_REAL_NAMESPACE_ID_HERE" }
-  // ]
+  //   2. "kv_namespaces": [
+  //        { "binding": "INSTALL_COUNTER", "id": "PASTE_REAL_NAMESPACE_ID_HERE" }
+  //      ]
+
+  "env": {
+    // Worker "public"  ->  ./public
+    "public": {
+      "name": "public",
+      "main": "./src/index.js",
+      "assets": {
+        "directory": "./public",
+        "binding": "ASSETS"
+      }
+    },
+
+    // Worker "bonus"   ->  ./bonus   (e.g. the BONUS138 PWA at /pwa/)
+    "bonus": {
+      "name": "bonus",
+      "main": "./src/index.js",
+      "assets": {
+        "directory": "./bonus",
+        "binding": "ASSETS"
+      }
+    },
+
+    // Worker "halo"    ->  ./halo
+    "halo": {
+      "name": "halo",
+      "main": "./src/index.js",
+      "assets": {
+        "directory": "./halo",
+        "binding": "ASSETS"
+      }
+    }
+  }
 }

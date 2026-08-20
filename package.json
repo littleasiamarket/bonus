@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy --env public",
+    "deploy:public": "wrangler deploy --env public",
+    "deploy:bonus": "wrangler deploy --env bonus",
+    "deploy:halo": "wrangler deploy --env halo",
+    "deploy:all": "npm run deploy:public && npm run deploy:bonus && npm run deploy:halo"
   },
   "devDependencies": {
     "wrangler": "latest"
