@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install Tracker</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<style>
+  :root {
+    color-scheme: light;
+    --plane:          #f9f9f7;
+    --surface:        #fcfcfb;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11, 11, 11, .10);
+    --track:          #eceae4;
+    --series-desktop: #2a78d6;
+    --series-mobile:  #eb6834;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --plane:          #0d0d0d;
+      --surface:        #1a1a19;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255, 255, 255, .10);
+      --track:          #26261f;
+      --series-desktop: #3987e5;
+      --series-mobile:  #d95926;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --plane:          #0d0d0d;
+    --surface:        #1a1a19;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255, 255, 255, .10);
+    --track:          #26261f;
+    --series-desktop: #3987e5;
+    --series-mobile:  #d95926;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--plane);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.5;
+  }
+  .page { max-width: 640px; margin: 0 auto; padding: 40px 20px 64px; }
+
+  header { margin-bottom: 28px; }
+  h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -.01em; }
+  .lede { font-size: 14px; color: var(--text-secondary); margin: 0; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  /* --- hero figure: the one number the page leads with --- */
+  .hero-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 6px;
+  }
+  .hero-value {
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    margin: 0;
+  }
+  .hero-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 10px 0 0;
+  }
+
+  /* --- stat tiles --- */
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .tile-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .tile-value { font-size: 32px; font-weight: 600; line-height: 1.1; letter-spacing: -.01em; }
+  .tile-share { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* identity dot -- carries the series color so text never has to */
+  .swatch { width: 10px; height: 10px; border-radius: 3px; flex: 0 0 auto; }
+  .swatch-desktop { background: var(--series-desktop); }
+  .swatch-mobile  { background: var(--series-mobile); }
+
+  /* --- proportion bar: 2px surface gap, 4px rounded outer ends --- */
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-muted);
+    margin: 0 0 14px;
+  }
+  .bar {
+    display: flex;
+    gap: 2px;
+    height: 20px;
+    background: var(--track);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-seg { height: 100%; min-width: 3px; transition: width .3s ease; cursor: default; }
+  .bar-seg:first-child { border-radius: 4px 0 0 4px; }
+  .bar-seg:last-child  { border-radius: 0 4px 4px 0; }
+  .bar-seg:only-child  { border-radius: 4px; }
+  .seg-desktop { background: var(--series-desktop); }
+  .seg-mobile  { background: var(--series-mobile); }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+
+  /* --- table view: the non-color path to the same numbers --- */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  caption {
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-muted);
+    padding-bottom: 12px;
+  }
+  th, td { padding: 10px 0; border-bottom: 1px solid var(--gridline); text-align: left; }
+  th { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody tr:last-child td, tbody tr:last-child th { border-bottom: none; }
+  tfoot td { border-top: 1px solid var(--baseline); border-bottom: none; font-weight: 600; padding-top: 12px; }
+
+  .toolbar { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .btn {
+    padding: 9px 18px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--text-primary);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .btn:active { opacity: .7; }
+  .status { font-size: 12px; color: var(--text-muted); }
+
+  #tooltip {
+    position: fixed;
+    z-index: 10;
+    padding: 7px 11px;
+    border-radius: 8px;
+    background: var(--text-primary);
+    color: var(--surface);
+    font-size: 12px;
+    line-height: 1.4;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .12s;
+    white-space: nowrap;
+  }
+  #tooltip.on { opacity: 1; }
+
+  @media (max-width: 420px) {
+    .tiles { grid-template-columns: 1fr; }
+    .hero-value { font-size: 44px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>Install tracker</h1>
+    <p class="lede">Successful installs of the YouTube shortcut, split by device.</p>
+  </header>
+
+  <div class="card">
+    <p class="hero-label">Total installs</p>
+    <p class="hero-value" id="hero">&mdash;</p>
+    <p class="hero-meta" id="hero-meta">Loading&hellip;</p>
+  </div>
+
+  <div class="tiles">
+    <div class="tile">
+      <div class="tile-label"><span class="swatch swatch-desktop"></span>Desktop</div>
+      <div class="tile-value" id="v-desktop">&mdash;</div>
+      <div class="tile-share" id="s-desktop">&nbsp;</div>
+    </div>
+    <div class="tile">
+      <div class="tile-label"><span class="swatch swatch-mobile"></span>Mobile</div>
+      <div class="tile-value" id="v-mobile">&mdash;</div>
+      <div class="tile-share" id="s-mobile">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="section-title">Device split</p>
+    <div class="bar" id="bar" role="img" aria-label="Device split"></div>
+    <div class="legend">
+      <span class="legend-item"><span class="swatch swatch-desktop"></span>Desktop <span id="l-desktop"></span></span>
+      <span class="legend-item"><span class="swatch swatch-mobile"></span>Mobile <span id="l-mobile"></span></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <table>
+      <caption>All values</caption>
+      <thead>
+        <tr><th scope="col">Device</th><th scope="col" class="num">Installs</th><th scope="col" class="num">Share</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Desktop</th><td class="num" id="t-desktop">&mdash;</td><td class="num" id="t-desktop-pct">&mdash;</td></tr>
+        <tr><th scope="row">Mobile</th><td class="num" id="t-mobile">&mdash;</td><td class="num" id="t-mobile-pct">&mdash;</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td>Total</td><td class="num" id="t-total">&mdash;</td><td class="num">100%</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn" id="refresh" type="button">Refresh</button>
+    <span class="status" id="status"></span>
+  </div>
+
+</div>
+
+<div id="tooltip" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var REFRESH_MS = 30000;
+  // Install-counter endpoint, served by the Cloudflare Worker in src/index.js.
+  var TRACK_URL = "/api/install";
+  var tooltip = document.getElementById("tooltip");
+
+  function $(id) { return document.getElementById(id); }
+
+  // Proportional figures, compacted only once the number gets long.
+  function fmt(n) {
+    if (n < 10000) return n.toLocaleString("en-US");
+    if (n < 1000000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+    return (n / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+  }
+
+  function pct(part, total) {
+    if (!total) return 0;
+    return Math.round((part / total) * 1000) / 10;
+  }
+
+  function whenText(iso) {
+    if (!iso) return null;
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return null;
+    return d.toLocaleString();
+  }
+
+  function attachTip(node, text) {
+    node.addEventListener("mousemove", function (e) {
+      tooltip.textContent = text;
+      tooltip.classList.add("on");
+      var pad = 14;
+      var x = Math.min(e.clientX + pad, window.innerWidth - tooltip.offsetWidth - 8);
+      tooltip.style.left = Math.max(8, x) + "px";
+      tooltip.style.top = Math.max(8, e.clientY - tooltip.offsetHeight - pad) + "px";
+    });
+    node.addEventListener("mouseleave", function () {
+      tooltip.classList.remove("on");
+    });
+  }
+
+  function render(data) {
+    var desktop = data.desktop || 0;
+    var mobile  = data.mobile || 0;
+    var total   = desktop + mobile;
+
+    var dPct = pct(desktop, total);
+    var mPct = pct(mobile, total);
+
+    $("hero").textContent = fmt(total);
+
+    var last = whenText(data.last_at);
+    $("hero-meta").textContent = last
+      ? "Last install " + last
+      : "No installs recorded yet.";
+
+    $("v-desktop").textContent = fmt(desktop);
+    $("v-mobile").textContent  = fmt(mobile);
+    $("s-desktop").textContent = total ? dPct + "% of installs" : " ";
+    $("s-mobile").textContent  = total ? mPct + "% of installs" : " ";
+
+    $("l-desktop").textContent = total ? "· " + dPct + "%" : "";
+    $("l-mobile").textContent  = total ? "· " + mPct + "%" : "";
+
+    // Proportion bar. Only non-zero segments are drawn, so the 2px gap never
+    // shows up as a stray sliver next to an empty category.
+    var bar = $("bar");
+    bar.innerHTML = "";
+    bar.setAttribute("aria-label", total
+      ? "Device split: desktop " + dPct + " percent, mobile " + mPct + " percent"
+      : "Device split: no installs yet");
+
+    [
+      { key: "desktop", label: "Desktop", value: desktop, share: dPct },
+      { key: "mobile",  label: "Mobile",  value: mobile,  share: mPct }
+    ].forEach(function (series) {
+      if (!series.value) return;
+      var seg = document.createElement("div");
+      seg.className = "bar-seg seg-" + series.key;
+      seg.style.width = series.share + "%";
+      attachTip(seg, series.label + ": " + fmt(series.value) + " (" + series.share + "%)");
+      bar.appendChild(seg);
+    });
+
+    $("t-desktop").textContent = fmt(desktop);
+    $("t-mobile").textContent  = fmt(mobile);
+    $("t-total").textContent   = fmt(total);
+    $("t-desktop-pct").textContent = total ? dPct + "%" : "—";
+    $("t-mobile-pct").textContent  = total ? mPct + "%" : "—";
+  }
+
+  function load() {
+    $("status").textContent = "Refreshing…";
+
+    fetch(TRACK_URL + "?t=" + new Date().getTime(), { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("counter endpoint returned " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        if (data && data.error) throw new Error(data.error);
+        render(data);
+        $("status").textContent = "Updated " + new Date().toLocaleTimeString();
+      })
+      .catch(function (err) {
+        $("status").textContent = "Could not load counter data.";
+        $("hero-meta").textContent = String(err.message || err);
+      });
+  }
+
+  $("refresh").addEventListener("click", load);
+  load();
+  setInterval(load, REFRESH_MS);
+})();
+</script>
+</body>
+</html>

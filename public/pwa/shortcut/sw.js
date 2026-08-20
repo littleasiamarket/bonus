@@ -1,8 +1,9 @@
-const CACHE_NAME = "yt-shortcut-v3";
-const FALLBACK_PAGE = "./index.html";
+const CACHE_NAME = "yt-shortcut-v4";
+// Cloudflare's asset handling 307-redirects "index.html" to the directory URL,
+// so cache the directory form only -- never store a redirect as the shell page.
+const FALLBACK_PAGE = "./";
 const SHELL_FILES = [
   "./",
-  "./index.html",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
@@ -32,16 +33,19 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
-  if (new URL(request.url).origin !== self.location.origin) return;
+
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+
+  // Never serve counter data from cache -- the stats page must read live values.
+  if (url.pathname === "/api/install") return;
 
   // Page loads: network first so edits go live, but fall back to the cached
   // shell so launching the installed app never lands on a browser error page.
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(() =>
-        caches.match(request)
-          .then((cached) => cached || caches.match(FALLBACK_PAGE))
-          .then((cached) => cached || caches.match("./"))
+        caches.match(request).then((cached) => cached || caches.match(FALLBACK_PAGE))
       )
     );
     return;
