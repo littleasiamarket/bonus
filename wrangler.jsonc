@@ -10,15 +10,17 @@
     "directory": "./public",
     // Lets the Worker hand non-API requests back to the asset pipeline.
     "binding": "ASSETS"
-  },
+  }
 
-  // Storage for the install counter.
-  // REPLACE the placeholder id below with your own namespace id:
-  //   npx wrangler kv namespace create INSTALL_COUNTER
-  "kv_namespaces": [
-    {
-      "binding": "INSTALL_COUNTER",
-      "id": "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
-    }
-  ]
+  // Storage for the install counter (optional; disabled until a KV namespace
+  // is bound). The Worker route /api/install returns a graceful 500 until then,
+  // and every static asset is served exactly as before.
+  //
+  // To enable the counter:
+  //   1. npx wrangler kv namespace create INSTALL_COUNTER
+  //   2. Uncomment the block below and paste the printed id.
+  //
+  // ,"kv_namespaces": [
+  //   { "binding": "INSTALL_COUNTER", "id": "PASTE_REAL_NAMESPACE_ID_HERE" }
+  // ]
 }
