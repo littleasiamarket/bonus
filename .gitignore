@@ -1,0 +1,5 @@
+node_modules/
+
+# Local wrangler dev state (includes local KV data)
+.wrangler/
+.dev.vars

@@ -1,7 +1,24 @@
 {
   "name": "bonus",
   "compatibility_date": "2026-06-07",
+
+  // Worker script backing the PWA install counter at /api/install.
+  // Static assets are still served first; this only handles that one route.
+  "main": "./src/index.js",
+
   "assets": {
-    "directory": "./public"
-  }
+    "directory": "./public",
+    // Lets the Worker hand non-API requests back to the asset pipeline.
+    "binding": "ASSETS"
+  },
+
+  // Storage for the install counter.
+  // REPLACE the placeholder id below with your own namespace id:
+  //   npx wrangler kv namespace create INSTALL_COUNTER
+  "kv_namespaces": [
+    {
+      "binding": "INSTALL_COUNTER",
+      "id": "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+    }
+  ]
 }

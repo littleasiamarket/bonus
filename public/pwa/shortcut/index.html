@@ -213,6 +213,54 @@
     navigator.serviceWorker.register("sw.js").catch(function () {});
   }
 
+  // ---- install counter -------------------------------------------------
+
+  // Install-counter endpoint, served by the Cloudflare Worker in src/index.js.
+  var TRACK_URL = "/api/install";
+
+  var COUNTED_KEY = "yt_shortcut_install_counted";
+  var counted = false;   // guards the double-fire of userChoice + appinstalled
+
+  function detectPlatform() {
+    if (navigator.userAgentData && typeof navigator.userAgentData.mobile === "boolean") {
+      return navigator.userAgentData.mobile ? "mobile" : "desktop";
+    }
+    // iPads on recent iOS report as MacIntel, so check for touch as well.
+    var isTouchMac = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+    var isMobileUA = /Android|iPhone|iPad|iPod|Mobile|Silk|Kindle|Opera Mini|IEMobile|Windows Phone/i
+      .test(navigator.userAgent);
+    return (isMobileUA || isTouchMac) ? "mobile" : "desktop";
+  }
+
+  function trackInstall() {
+    if (counted) return;
+    counted = true;
+
+    // Don't re-count if this browser already recorded an install.
+    try {
+      if (localStorage.getItem(COUNTED_KEY) === "1") return;
+      localStorage.setItem(COUNTED_KEY, "1");
+    } catch (e) { /* private mode: the in-page guard above still applies */ }
+
+    var body = JSON.stringify({ platform: detectPlatform() });
+
+    // sendBeacon survives the page being backgrounded right after installing.
+    if (navigator.sendBeacon) {
+      try {
+        navigator.sendBeacon(TRACK_URL, new Blob([body], { type: "application/json" }));
+        return;
+      } catch (e) { /* fall through to fetch */ }
+    }
+    fetch(TRACK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: body,
+      keepalive: true
+    }).catch(function () {});
+  }
+
+  // ---- install flow ----------------------------------------------------
+
   var deferredPrompt = null;
 
   // Chrome/Edge/Samsung fire this when the PWA meets the install criteria.
@@ -225,6 +273,7 @@
 
   window.addEventListener("appinstalled", function () {
     deferredPrompt = null;
+    trackInstall();
     show("done");
   });
 
@@ -237,6 +286,7 @@
     prompt.prompt();
     prompt.userChoice.then(function (choice) {
       if (choice && choice.outcome === "accepted") {
+        trackInstall();
         show("done");
       } else {
         // User backed out -- stay here and explain how to do it by hand.
