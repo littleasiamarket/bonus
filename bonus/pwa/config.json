@@ -13,8 +13,8 @@
     "dark": "#161310"
   },
   "assets_source": {
-    "note": "Data brand (domain, warna) dari public/bonus.html. Ikon aplikasi dibuat dari logo BONUS138 yang diberikan user (disimpan di icons/logo-source.png).",
-    "canonical_domain": "https://bonus138kita.com/",
+    "note": "Warna brand dari public/bonus.html. Ikon aplikasi dibuat dari logo GIF: https://cdn.robotaset.com/assets/tpl/1d35e19e19/images/logo.gif (frame disimpan di icons/logo-source.png).",
+    "canonical_domain": "https://bonusgame.gaskeun.vip/",
     "icon_source": "icons/logo-source.png"
   },
   "entry": "index.html",
