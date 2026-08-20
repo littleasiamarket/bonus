@@ -24,10 +24,16 @@
   "compatibility_date": "2026-06-07",
   "main": "./src/index.js",
 
+  // Workers Logs + metrics on for every environment (inherited by envs).
+  "observability": { "enabled": true },
+
   "assets": {
     "directory": "./public",
     // Lets the Worker hand non-API requests back to the asset pipeline.
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // Clean URLs (/pwa -> /pwa/index.html) + serve 404.html on unknown paths.
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
   },
 
   // Optional install-counter storage (disabled by default). To enable it for a
@@ -45,7 +51,9 @@
       "main": "./src/index.js",
       "assets": {
         "directory": "./public",
-        "binding": "ASSETS"
+        "binding": "ASSETS",
+        "html_handling": "auto-trailing-slash",
+        "not_found_handling": "404-page"
       }
     },
 
@@ -55,7 +63,9 @@
       "main": "./src/index.js",
       "assets": {
         "directory": "./bonus",
-        "binding": "ASSETS"
+        "binding": "ASSETS",
+        "html_handling": "auto-trailing-slash",
+        "not_found_handling": "404-page"
       }
     },
 
@@ -65,7 +75,9 @@
       "main": "./src/index.js",
       "assets": {
         "directory": "./halo",
-        "binding": "ASSETS"
+        "binding": "ASSETS",
+        "html_handling": "auto-trailing-slash",
+        "not_found_handling": "404-page"
       }
     }
   }
