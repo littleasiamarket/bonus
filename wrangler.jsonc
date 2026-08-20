@@ -14,6 +14,10 @@
   //
   //  The top-level settings below are the defaults for the "public" worker;
   //  the "env" blocks override name + assets folder for the others.
+  //
+  //  Custom domains are NOT set here. Attach a domain to each Worker in the
+  //  Cloudflare dashboard: Workers & Pages -> (worker) -> Settings ->
+  //  Domains & Routes -> Add -> Custom Domain. See DEPLOY.md.
   // ============================================================
 
   "name": "public",
