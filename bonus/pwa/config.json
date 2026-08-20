@@ -1,0 +1,36 @@
+{
+  "name": "bonus138-pwa",
+  "purpose": "PWA installer (add-to-home-screen shortcut) untuk BONUS138.",
+  "goal": "Membuat PWA untuk BONUS138: sebuah halaman bergaya Google Play Store yang bisa dipasang ke layar utama, dan ketika dibuka dari ikonnya langsung mengarah ke situs BONUS138.",
+  "brand": "BONUS138",
+  "language": "id",
+  "target_url": "https://bonus138kita.com/",
+  "theme_color": "#b8860b",
+  "background_color": "#161310",
+  "brand_colors": {
+    "gold": "#f4d172",
+    "gold_dark": "#b8860b",
+    "dark": "#161310"
+  },
+  "assets_source": {
+    "note": "Ikon & data brand diambil dari public/bonus.html pada repo ini.",
+    "canonical_domain": "https://bonus138kita.com/",
+    "logo_wordmark": "https://japantrip.vip/bonus138.webp"
+  },
+  "reference_design": {
+    "url": "https://app.panen138shortcut.com/",
+    "note": "Desain di-reskin dari PANEN138 menjadi BONUS138. Semua teks bermerek panen138 diganti bonus138, ulasan ditulis ulang memuji BONUS138, seluruh teks berbahasa Indonesia."
+  },
+  "entry": "index.html",
+  "files": {
+    "index.html": "Halaman installer PWA (UI + logika tombol instal).",
+    "manifest.webmanifest": "Web App Manifest (nama, ikon, warna, start_url).",
+    "sw.js": "Service worker (cache shell offline + fallback).",
+    "icons/": "Ikon aplikasi 192, 512, dan 512 maskable (dibuat dari brand BONUS138)."
+  },
+  "deploy": {
+    "platform": "Cloudflare Workers (wrangler) - repo ini menyajikan folder ./public sebagai aset statis.",
+    "important": "Folder ini berada di /bonus/pwa (root repo), DI LUAR ./public. Untuk disajikan Cloudflare, pindahkan/salin ke public/, atau atur wrangler.jsonc agar menyertakan folder ini.",
+    "expected_path_if_under_public": "/pwa/ (mis. https://<domain>/pwa/)"
+  }
+}

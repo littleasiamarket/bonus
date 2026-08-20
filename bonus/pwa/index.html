@@ -1,0 +1,1886 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- Tujuan halaman: installer PWA (pintasan layar utama) untuk BONUS138.
+     Saat dibuka dari ikon yang sudah terpasang, halaman ini mengarahkan
+     pengguna ke situs BONUS138. Lihat config.json untuk detail. -->
+<script>
+  window.__INSTALL_TARGET_URL__ = "https://bonus138kita.com/";
+  window.__INSTALL_SCOPE__ = "./";
+  window.__INSTALL_PAGE_PATH__ = "./";
+</script>
+
+<!-- Launcher: kalau dijalankan dari ikon (standalone) atau ?source=pwa,
+     langsung buka situs BONUS138. Di tab browser biasa, tetap di halaman ini. -->
+<script>
+(function () {
+  var t = window.__INSTALL_TARGET_URL__;
+  if (!t) return;
+  var standalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.matchMedia("(display-mode: fullscreen)").matches ||
+    window.matchMedia("(display-mode: minimal-ui)").matches ||
+    window.navigator.standalone === true;
+  var q = new URLSearchParams(location.search);
+  var launched = q.get("source") === "pwa" || q.get("pwa") === "1";
+  if (standalone || launched) window.location.replace(t);
+})();
+</script>
+
+<title>BONUS138</title>
+<meta name="description" content="Instal BONUS138 - akses cepat langsung dari layar utama">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#b8860b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BONUS138">
+<meta property="og:title" content="BONUS138">
+<meta property="og:description" content="Instal BONUS138 - akses cepat langsung dari layar utama">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<style>
+:root{
+  --theme-color:#028760;
+  --install-text-color:#ffe336;
+  --text-color:#202124;
+  --text-color-main:#5f6368;
+  --border:#dadce0;
+}
+*,:before,:after{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;background:#fff}
+body{
+  margin:0 auto;
+  max-width:750px;
+  width:100%;
+  background:#fff;
+  color:var(--text-color);
+  font-family:Roboto,Arial,sans-serif;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img,svg{display:block}
+img{max-width:100%;height:auto}
+button{font:inherit}
+
+/* TOP HEADER IMAGE */
+.rb-topbar{
+  width:100%;
+  height:auto;
+  max-height:none;
+  position:relative;
+  background:#fff;
+}
+.rb-topbar .topbar{
+  display:block;
+  position:relative;
+  top:auto;
+  left:auto;
+  right:auto;
+  width:100%;
+  height:auto;
+  max-width:750px;
+  margin:0 auto;
+  object-fit:contain;
+  background:#fff;
+  z-index:10;
+}
+
+/* MAIN */
+.container{
+  overflow:hidden;
+  padding:18px 16px 44px;
+  width:100%;
+  user-select:none;
+}
+
+/* APP HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  margin:0 0 24px;
+  min-height:74px;
+}
+.header__icon{
+  align-items:center;
+  display:flex;
+  height:74px;
+  justify-content:center;
+  position:relative;
+  width:74px;
+  flex:0 0 74px;
+  margin-right:18px;
+}
+.header__icon--img,
+.header__icon--mark{
+  border-radius:14px;
+  display:block;
+  height:74px;
+  width:74px;
+  object-fit:cover;
+  overflow:hidden;
+}
+.header__icon--mark{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#82173a;
+  color:#fff;
+  font-size:28px;
+  font-weight:700;
+}
+.header__icon--loading{
+  align-items:center;
+  display:flex;
+  height:100%;
+  justify-content:center;
+  position:absolute;
+  inset:0;
+  z-index:5;
+}
+.header__icon--loading svg{
+  width:100%;height:100%;
+  color:var(--theme-color);
+  animation:spin 2s linear infinite;
+}
+.header__icon--loading svg circle{
+  stroke:currentColor;
+  stroke-width:2px;
+  stroke-linecap:round;
+}
+/* Respect the hidden attribute on the icon/fallback/loading elements. */
+.header__icon--mark[hidden],
+.header__icon--img[hidden],
+.header__icon--loading[hidden] {
+  display: none !important;
+}
+
+*,:after,:before{border:0 solid;box-sizing:border-box;}
+:disabled{cursor:default;}
+img{display:block;}
+img{height:auto;max-width:100%;}
+div:focus{outline:none;}
+.rb-topbar,.rb-topbar .topbar{height:14.4vw;max-height:108px;}
+.rb-topbar .topbar{background-color:#fff;left:0;margin:0 auto;max-width:750px;-o-object-fit:cover;object-fit:cover;position:fixed;right:0;top:0;width:100%;z-index:10;}
+
+.header__info{
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.header__info-title{
+  color:var(--text-color);
+  min-height:auto;
+  overflow-wrap:anywhere;
+  display:flex;
+  align-items:center;
+  margin:0 0 2px;
+}
+.header__info-title span{
+  color:var(--text-color);
+  font-size:24px;
+  line-height:30px;
+  font-weight:500;
+  letter-spacing:0;
+}
+.header__info-title-tag{
+  display:inline-block;
+  width:20px;
+  height:20px;
+  margin-left:5px;
+  object-fit:contain;
+  flex:0 0 20px;
+}
+.header__info-description{
+  color:var(--theme-color);
+  font-size:14px;
+  font-weight:600;
+  line-height:20px;
+  margin:0 0 3px;
+}
+.header__info-progress{
+  color:#333;
+  display:none;
+  font-size:12px;
+  font-weight:500;
+  line-height:16px;
+  margin:0 0 3px;
+}
+.header__info-play{
+  align-items:center;
+  color:#333;
+  display:flex;
+  font-size:10px;
+  font-weight:400;
+  height:auto;
+  line-height:15px;
+  margin:0;
+}
+.security-icon{width:11px;height:11px;margin-right:5px}
+
+/* INFO */
+.info{
+  margin-top:0;
+  margin-bottom:30px;
+  min-height:42px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+}
+.info::-webkit-scrollbar{display:none}
+.info__view__wrap{display:flex;width:max-content;}
+.info__view{
+  align-items:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:0 15px;
+  position:relative;
+  width:fit-content;
+}
+.info__view:before{
+  background:#ebebeb;
+  bottom:0;
+  content:"";
+  height:27px;
+  margin:auto 0;
+  position:absolute;
+  top:0;
+  width:1px;
+  left:0;
+}
+.info__view:first-child{padding-left:0}
+.info__view:first-child:before{display:none}
+.info__view-value{
+  align-items:center;
+  color:var(--text-color);
+  display:flex;
+  font-size:14px;
+  font-weight:600;
+  line-height:18px;
+  margin-bottom:6px;
+}
+.info__view-label{
+  color:#606569;
+  font-size:12px;
+  font-weight:400;
+  line-height:17px;
+  white-space:nowrap;
+}
+.rating-star{width:11px;height:11px;margin-left:2px}
+.info__view-badge{
+  height:18px;
+  margin-bottom:6px;
+  width:18px;
+  object-fit:contain;
+}
+.info__view-icon{
+  height:15px;
+  margin-bottom:8px;
+  width:25px;
+  object-fit:contain;
+}
+
+/* INSTALL */
+.install-btn{
+  margin-bottom:20px;
+  height:54px;
+  overflow:hidden;
+  position:relative;
+  width:100%;
+}
+.install-btn__ing,.install-btn__view{
+  align-items:center;
+  border-radius:8px;
+  display:none;
+  font-size:14px;
+  font-weight:600;
+  height:54px;
+  overflow:hidden;
+  padding:0 12px;
+  position:relative;
+  width:100%;
+  z-index:1;
+  background:var(--theme-color);
+  justify-content:center;
+  color:#fff;
+}
+.container[data-type=INSTALL] .install-btn__ing{display:flex}
+.install-btn__ing{
+  flex-direction:column;
+  height:auto;
+  min-height:54px;
+  padding:8px;
+}
+.install-btn__ing__rapid{
+  align-items:center;
+  color:var(--install-text-color);
+  display:flex;
+  font-size:15px;
+  font-weight:500;
+  justify-content:center;
+  line-height:21px;
+}
+.install-lightning{width:12px;height:18px;margin-right:4px}
+.install-btn__ing__countdown{
+  color:#fff;
+  font-size:12px;
+  font-weight:400;
+  line-height:17px;
+}
+.shiny-btn:after{
+  animation:shine 4s ease-in-out infinite;
+  background:#fff;
+  content:"";
+  display:inline-block;
+  height:100%;
+  position:absolute;
+  top:-180px;
+  width:30px;
+  left:0;
+}
+
+/* SHARE */
+.share-row{
+  margin-bottom:28px;
+  min-height:45px;
+  align-items:center;
+  display:flex;
+  justify-content:center;
+}
+.share-row__item{
+  margin:12px;
+  max-width:220px;
+  min-width:120px;
+  align-items:center;
+  display:flex;
+  justify-content:center;
+}
+.share-row__item svg{
+  flex:0 0 17px;
+  height:20px;
+  width:17px;
+  margin-right:10px;
+  color:#00a173;
+}
+.share-row__item>div{
+  color:#00a173;
+  flex:1;
+  font-size:14px;
+  font-weight:500;
+  overflow:hidden;
+}
+
+/* SCREENSHOTS */
+.shots{
+  margin-bottom:24px;
+  min-height:224px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  width:100%;
+  scrollbar-width:none;
+}
+.shots::-webkit-scrollbar{display:none}
+.shots__list{
+  display:flex;
+  flex-wrap:nowrap;
+  height:224px;
+  width:max-content;
+}
+.shots__item{
+  border-radius:8px;
+  height:224px;
+  overflow:hidden;
+  margin-right:11px;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+.shots__item img{
+  display:block;
+  height:224px;
+  width:auto;
+  max-width:none;
+}
+
+/* SECTIONS */
+.panel{
+  position:relative;
+  margin:0 0 30px;
+  padding:0;
+  background:#fff;
+}
+.panel__head{
+  position:relative;
+  display:flex;
+  align-items:center;
+  margin-bottom:18px;
+}
+.panel__title{
+  color:#202124;
+  font-size:18px;
+  font-weight:500;
+  line-height:24px;
+  margin:0;
+}
+.panel__arrow{
+  height:15px;
+  position:absolute;
+  right:0;
+  width:15px;
+  color:#5f6368;
+}
+.panel__text{
+  color:var(--text-color-main);
+  font-size:14px;
+  font-weight:400;
+  line-height:19px;
+  margin:0 0 16px;
+  overflow-wrap:break-word;
+}
+.chips{
+  display:flex;
+  flex-flow:wrap;
+  margin-bottom:15px;
+}
+.chip{
+  align-items:center;
+  background:#fff;
+  border:1px solid #dadce0;
+  border-radius:15px;
+  color:var(--text-color-main);
+  display:flex;
+  font-size:14px;
+  font-weight:400;
+  height:30px;
+  justify-content:center;
+  margin:0 11px 16px 0;
+  padding:0 12px;
+  width:fit-content;
+}
+
+/* SAFETY */
+.safety{
+  border:1px solid #dadce0;
+  border-radius:7px;
+  padding:24px 26px 8px;
+  width:100%;
+  margin:0;
+  list-style:none;
+}
+.safety li{
+  color:var(--text-color-main);
+  display:flex;
+  margin-bottom:16px;
+  font-size:14px;
+  line-height:23px;
+}
+.safety li svg,
+.safety li > img{
+  align-items:center;
+  display:flex;
+  height:20px;
+  justify-content:center;
+  width:20px;
+  flex:0 0 20px;
+  margin-right:16px;
+  color:#5f6368;
+  object-fit:contain;
+}
+
+.safety .safety-content{
+  flex:1;
+  min-width:0;
+}
+
+.safety .safety-content p{
+  margin:0;
+  color:var(--text-color-main);
+  font-size:14px;
+  font-weight:400;
+  line-height:23px;
+}
+
+.safety .safety-content .learn-more ins{
+  color:var(--text-color-main);
+  text-decoration:underline;
+}
+
+/* RATINGS */
+.ratings{
+  align-items:center;
+  display:flex;
+  justify-content:space-between;
+}
+.ratings__score{min-width:170px}
+.ratings__number{
+  color:var(--text-color);
+  font-size:58px;
+  font-weight:400;
+  line-height:1;
+}
+.ratings__stars{
+  color:var(--theme-color);
+  font-size:15px;
+  letter-spacing:1px;
+  margin-top:6px;
+}
+.ratings__count{
+  color:var(--text-color-main);
+  font-size:12px;
+  margin-top:14px;
+}
+.ratings__bars{
+  flex:1;
+  max-width:360px;
+  margin-left:10px;
+}
+.ratings__bar{
+  align-items:center;
+  color:#444;
+  display:flex;
+  font-size:11px;
+  margin-bottom:6.5px;
+}
+.ratings__bar span{width:10px}
+.ratings__bar i{
+  background:#e3e3e3;
+  border-radius:5px;
+  flex:1;
+  height:9px;
+  margin-left:14.5px;
+  overflow:hidden;
+  position:relative;
+}
+.ratings__bar i b{
+  background:var(--theme-color);
+  border-radius:5px;
+  height:100%;
+  display:block;
+}
+
+/* BOTTOM MENU */
+.rb-menus__placeholder{height:54px;width:100%}
+.rb-menus__body{
+  background:#fff;
+  border-top:1px solid #dadce0;
+  bottom:0;
+  display:flex;
+  left:0;
+  margin:0 auto;
+  max-width:750px;
+  position:fixed;
+  right:0;
+  width:100%;
+  z-index:10;
+}
+.rb-menus__item{
+  align-items:center;
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  height:54px;
+  justify-content:center;
+  color:#5f6368;
+}
+.rb-menus__item svg,
+.rb-menus__item img{
+  display:block;
+  height:24px;
+  width:24px;
+  object-fit:contain;
+}
+.rb-menus__item>.title{
+  color:#5f6368;
+  font-size:12px;
+  font-weight:500;
+  line-height:1.1;
+  margin-top:2px;
+}
+.rb-menus__item.active,
+.rb-menus__item.active>.title{color:#028760}
+
+/* LIGHTBOX */
+.image-preview-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.92);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2147483647;
+  padding:20px;
+}
+.image-preview-overlay.active{display:flex}
+.image-preview-overlay img{
+  max-width:95vw;
+  max-height:92vh;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  border-radius:8px;
+}
+.image-preview-close{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:42px;
+  height:42px;
+  border:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  font-size:30px;
+  cursor:pointer;
+}
+
+
+/* REVIEW FILTERS + REVIEW LIST */
+.comments__tips{
+  color:var(--text-color-main);
+  font-size:14px;
+  margin:0 0 18px;
+  line-height:19px;
+}
+
+.comments__type{
+  display:flex;
+  flex-flow:wrap;
+  gap:10px;
+  margin:0 0 28px;
+}
+
+.comments__type-item{
+  align-items:center;
+  border:1px solid #dadce0;
+  border-radius:18px;
+  color:var(--text-color-main);
+  display:flex;
+  font-size:14px;
+  height:36px;
+  justify-content:center;
+  padding:0 16px;
+  width:fit-content;
+}
+
+.comments__type-item img{
+  width:14px;
+  height:14px;
+  margin-right:8px;
+  object-fit:contain;
+}
+
+.comments__type-active{
+  background:#e6f3ef;
+  border-color:#e6f3ef;
+  color:#028760;
+}
+
+.comments__list{
+  margin-top:26px;
+}
+
+.comments__list-item{
+  margin:30px 0;
+}
+
+.comments__list-header{
+  align-items:center;
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+
+.comments__list-avatar{
+  border-radius:50%;
+  height:32px;
+  object-fit:cover;
+  width:32px;
+  margin-right:16px;
+  flex:0 0 32px;
+}
+
+.comments__list-name{
+  color:var(--text-color);
+  font-size:14.5px;
+  margin-right:auto;
+}
+
+.comments__list-more{
+  width:18px;
+  height:18px;
+  color:#5f6368;
+}
+
+.comments__list-stars{
+  align-items:center;
+  display:flex;
+  margin-bottom:10px;
+}
+
+.comments__list-stars img{
+  width:11px;
+  height:11px;
+  margin-right:2px;
+}
+
+.comments__list-stars span{
+  color:var(--text-color-main);
+  font-size:12px;
+  margin-left:8px;
+}
+
+.comments__list-detail{
+  color:var(--text-color-main);
+  font-size:14px;
+  line-height:20px;
+  margin-top:8px;
+  overflow-wrap:break-word;
+}
+
+@media(max-width:520px){
+  .comments__type{
+    margin-bottom:22px;
+  }
+  .comments__list-item{
+    margin:24px 0;
+  }
+}
+
+/* RESPONSIVE */
+@media(max-width:520px){
+  .container{padding:16px 16px 74px}
+  .header__icon{margin-right:18px}
+  .header__info-title span{font-size:22px}
+  .info__view{padding:0 13px}
+  .ratings__score{min-width:130px}
+  .ratings__bars{max-width:220px}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shine{
+  0%{opacity:0;transform:scale(0) rotate(45deg)}
+  70%{opacity:.5;transform:scale(0) rotate(45deg)}
+  71%{opacity:1;transform:scale(4) rotate(45deg)}
+  100%{opacity:0;transform:scale(50) rotate(45deg)}
+}
+
+.header__info-play .ic_dun{width:10px;}
+[dir=ltr] .header__info-play .ic_dun{margin-right:4px;}
+*,:after,:before{border:0 solid;box-sizing:border-box;}
+:disabled{cursor:default;}
+img{display:block;}
+img{height:auto;max-width:100%;}
+
+/* =========================================================
+   FUNCTIONAL PATCH — JS STRUCTURE TIDAK DIUBAH
+   Menyamakan state CSS dengan state yang dipakai JavaScript:
+   INSTALL -> INSTALLING -> PLAY
+   ========================================================= */
+
+/* Semua state button disembunyikan secara default */
+.install-btn__ing,
+.install-btn__view {
+  display: none;
+}
+
+/* State awal: tampilkan tombol Instal */
+
+
+
+
+/* Saat user menerima prompt: tampilkan progress/countdown */
+.container[data-type="INSTALLING"] .install-btn__install,
+.container[data-type="INSTALLING"] .install-btn__play,
+.container[data-type="INSTALLING"] .install-btn__ready,
+.container[data-type="INSTALLING"] .install-btn__installing {
+  display: none !important;
+}
+
+.container[data-type="INSTALLING"] .install-btn__ing {
+  display: flex !important;
+}
+
+/* Spinner icon install.
+   !important diperlukan karena HTML memakai atribut hidden. */
+.container[data-type="INSTALLING"] #iconLoading {
+  display: flex !important;
+}
+
+/* Selama proses install, sembunyikan deskripsi dan tampilkan progress */
+.container[data-type="INSTALLING"] .header__info-description {
+  display: none !important;
+}
+
+.container[data-type="INSTALLING"] #installProgress {
+  display: block !important;
+}
+
+/* Setelah terpasang: tombol menjadi Mainkan */
+.container[data-type="PLAY"] .install-btn__ing,
+.container[data-type="PLAY"] .install-btn__install,
+.container[data-type="PLAY"] .install-btn__ready,
+.container[data-type="PLAY"] .install-btn__installing {
+  display: none !important;
+}
+
+.container[data-type="PLAY"] .install-btn__play {
+  display: flex !important;
+}
+
+.container[data-type="PLAY"] .header__info-description {
+  display: none !important;
+}
+
+.container[data-type="PLAY"] #installProgress {
+  display: block !important;
+}
+
+/* =========================================================
+   PWA FEEDBACK
+   Dipakai oleh showFeedback(), showLoadingOverlay(),
+   dan showIosGuide() dari JS Anda.
+   ========================================================= */
+
+#pwa-feedback {
+  display: none;
+}
+
+#pwa-feedback.pwa-feedback--show {
+  display: block;
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  max-width: min(92vw, 22rem);
+  padding: 12px 16px;
+  background: #1e1e1e;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  z-index: 2147483646;
+  box-shadow: 0 4px 16px rgba(0,0,0,.35);
+}
+
+#pwa-feedback.pwa-feedback--loading,
+#pwa-feedback.pwa-feedback--guide {
+  display: block;
+  position: fixed;
+  inset: 0;
+  max-width: none;
+  transform: none;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  z-index: 2147483646;
+}
+
+.pwa-feedback__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+}
+
+.pwa-feedback__loadingPanel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  padding: 20px;
+  border-radius: 12px;
+  background: #1e1e1e;
+}
+
+.pwa-feedback__spinner {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255,255,255,.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .65s linear infinite;
+}
+
+.pwa-feedback__guidePanel {
+  position: absolute;
+  left: 50%;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(92vw,390px);
+  padding: 18px;
+  background: #fff;
+  color: #202124;
+  border-radius: 18px;
+  box-shadow: 0 22px 70px rgba(0,0,0,.42);
+}
+
+.pwa-feedback__guideTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.pwa-feedback__guideIcon {
+  display: flex;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: #e9f7f2;
+  border-radius: 12px;
+  color: var(--theme-color);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.pwa-feedback__guideTitle {
+  margin: 0 34px 4px 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.pwa-feedback__guideText {
+  margin: 0;
+  color: #5f6368;
+  font-size: 13px;
+}
+
+.pwa-feedback__guideClose {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0 0 2px;
+  border: 0;
+  border-radius: 50%;
+  background: #eef3f6;
+  color: #334155;
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pwa-feedback__guideSteps {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.pwa-feedback__guideStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 12px;
+  background: #f5f8fa;
+  border: 1px solid #e1e8ee;
+  border-radius: 12px;
+}
+
+.pwa-feedback__guideNum {
+  display: flex;
+  flex: 0 0 24px;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--theme-color);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pwa-feedback__guideStepText {
+  color: #202124;
+  font-size: 13px;
+}
+
+.pwa-feedback__guideHint {
+  margin: 0;
+  color: #80868b;
+  font-size: 12px;
+}
+/* =========================================================
+   FINAL INSTALL BUTTON OVERRIDE
+   Tampilan awal mengikuti referensi:
+   "Instal Cepat" + "Download dalam 10 s"
+   JS tidak diubah.
+   ========================================================= */
+
+.install-btn {
+  position: relative;
+  width: 100%;
+  height: 54px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.install-btn__ing,
+.install-btn__view {
+  width: 100%;
+  height: 54px;
+  border-radius: 8px;
+  background: var(--theme-color);
+  justify-content: center;
+  color: #fff;
+}
+
+/* Default semua state disembunyikan */
+.install-btn__ing {
+  display: none;
+  align-items: center;
+  flex-direction: column;
+  height: 54px;
+  min-height: 54px;
+  padding: 8px;
+}
+
+.install-btn__view {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* STATE AWAL:
+   tampilkan quick install + countdown */
+.container[data-type="INSTALL"] .install-btn__ing {
+  display: flex !important;
+}
+
+.container[data-type="INSTALL"] .install-btn__install,
+.container[data-type="INSTALL"] .install-btn__play,
+.container[data-type="INSTALL"] .install-btn__ready,
+.container[data-type="INSTALL"] .install-btn__installing {
+  display: none !important;
+}
+
+/* Saat proses berjalan, tetap gunakan blok countdown */
+.container[data-type="INSTALLING"] .install-btn__ing {
+  display: flex !important;
+}
+
+.container[data-type="INSTALLING"] .install-btn__install,
+.container[data-type="INSTALLING"] .install-btn__play,
+.container[data-type="INSTALLING"] .install-btn__ready,
+.container[data-type="INSTALLING"] .install-btn__installing {
+  display: none !important;
+}
+
+/* State tambahan jika dipakai */
+.container[data-type="READY_PROMPT"] .install-btn__ready {
+  display: flex !important;
+}
+
+.container[data-type="INSTALLING_WAIT"] .install-btn__installing {
+  display: flex !important;
+}
+
+/* Sudah terpasang */
+.container[data-type="PLAY"] .install-btn__ing,
+.container[data-type="PLAY"] .install-btn__install,
+.container[data-type="PLAY"] .install-btn__ready,
+.container[data-type="PLAY"] .install-btn__installing {
+  display: none !important;
+}
+
+.container[data-type="PLAY"] .install-btn__play {
+  display: flex !important;
+}
+
+/* Teks quick install */
+.install-btn__ing__rapid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--install-text-color, #ffe336);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 21px;
+}
+
+.install-btn__ing__rapid .ic_x {
+  display: block;
+  width: 12px;
+  height: 18px;
+  margin-right: 4px;
+  object-fit: contain;
+}
+
+.install-btn__ing__countdown {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+}
+
+/* Progress / description mengikuti state JS */
+.container[data-type="INSTALLING"] #iconLoading {
+  display: flex !important;
+}
+
+.container[data-type="INSTALLING"] .header__info-description,
+.container[data-type="PLAY"] .header__info-description {
+  display: none !important;
+}
+
+.container[data-type="INSTALLING"] #installProgress,
+.container[data-type="PLAY"] #installProgress {
+  display: block !important;
+}
+/* =========================================================
+   FINAL LOADING/SPINNER FIX
+   JS TIDAK DIUBAH
+   ========================================================= */
+
+/* Loading ring */
+.header__icon--loading {
+  position: absolute;
+  inset: -4px;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* hidden tetap berlaku pada state normal */
+.header__icon--loading[hidden] {
+  display: none !important;
+}
+
+/* Tetapi saat JS mengubah state ke INSTALLING,
+   spinner dipaksa tampil walaupun elemen masih punya hidden */
+.container[data-type="INSTALLING"] #iconLoading,
+.container[data-type="INSTALLING"] #iconLoading[hidden] {
+  display: flex !important;
+}
+
+/* SVG spinner */
+.header__icon--loading svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: var(--theme-color, #028760);
+  transform-origin: center;
+  animation: pwa-loading-rotate 2s linear infinite !important;
+}
+
+.header__icon--loading circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transform-origin: center;
+  animation: pwa-loading-dash 1.5s ease-in-out infinite !important;
+}
+
+@keyframes pwa-loading-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pwa-loading-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -40;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -120;
+  }
+}
+
+/* =========================================================
+   BUTTON STATE FINAL
+   State awal tetap sama seperti referensi:
+   Instal Cepat + Download dalam 10 s
+   ========================================================= */
+
+.install-btn__ing,
+.install-btn__view {
+  display: none;
+}
+
+/* State awal */
+.container[data-type="INSTALL"] .install-btn__ing {
+  display: flex !important;
+}
+
+.container[data-type="INSTALL"] .install-btn__play,
+.container[data-type="INSTALL"] .install-btn__install,
+.container[data-type="INSTALL"] .install-btn__ready,
+.container[data-type="INSTALL"] .install-btn__installing {
+  display: none !important;
+}
+
+/* Countdown aktif ketika JS memanggil startLoading() */
+.container[data-type="INSTALLING"] .install-btn__ing {
+  display: flex !important;
+}
+
+.container[data-type="INSTALLING"] .install-btn__play,
+.container[data-type="INSTALLING"] .install-btn__install,
+.container[data-type="INSTALLING"] .install-btn__ready,
+.container[data-type="INSTALLING"] .install-btn__installing {
+  display: none !important;
+}
+
+/* State lain jika digunakan */
+.container[data-type="READY_PROMPT"] .install-btn__ready {
+  display: flex !important;
+}
+
+.container[data-type="INSTALLING_WAIT"] .install-btn__installing {
+  display: flex !important;
+}
+
+/* Setelah terpasang */
+.container[data-type="PLAY"] .install-btn__ing,
+.container[data-type="PLAY"] .install-btn__install,
+.container[data-type="PLAY"] .install-btn__ready,
+.container[data-type="PLAY"] .install-btn__installing {
+  display: none !important;
+}
+
+.container[data-type="PLAY"] .install-btn__play {
+  display: flex !important;
+}
+
+/* Progress header */
+.container[data-type="INSTALLING"] .header__info-description,
+.container[data-type="PLAY"] .header__info-description {
+  display: none !important;
+}
+
+.container[data-type="INSTALLING"] #installProgress,
+.container[data-type="PLAY"] #installProgress {
+  display: block !important;
+}
+
+/* Pastikan countdown terlihat dan tidak tertimpa rule lain */
+.install-btn__ing__countdown,
+.install-btn__ing__countdown .countdown-num {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.install-btn__ing {
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.install-btn__ing__rapid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.install-btn__ing__rapid .ic_x {
+  display: block;
+  width: 12px;
+  height: 18px;
+  margin-right: 4px;
+  object-fit: contain;
+}
+</style>
+</head>
+<body>
+<div id="pwa-feedback" role="status" aria-live="polite"></div>
+
+<div class="rb-topbar" id="rb-topbar">
+  <img class="topbar" src="https://img.ligasumut.com/OTHER/header.png" alt="Google Play Header">
+</div>
+<div class="container" data-type="INSTALL" id="container">
+
+  <div class="header">
+    <div class="header__icon">
+      <div class="header__icon--loading" id="iconLoading" hidden>
+        <svg viewBox="25 25 50 50"><circle cx="50" cy="50" fill="none" r="20"></circle></svg>
+      </div>
+      <div class="header__icon--mark" data-icon-fallback>B</div>
+      <img class="header__icon--img" data-app-icon alt="" hidden>
+    </div>
+
+    <div class="header__info">
+      <div class="header__info-title">
+        <span data-value="app_name">BONUS138</span>
+        <img class="header__info-title-tag" src="https://img.ligasumut.com/OTHER/ic_tag.png" alt="Badge">
+      </div>
+      <p class="header__info-description">Diverifikasi oleh Google Play</p>
+      <p class="header__info-progress" id="installProgress">0%</p>
+      <p class="header__info-progress" id="installLineHint">Siap - ketuk instal</p>
+      <p class="header__info-play">
+        <img class="ic_dun" src="https://img.ligasumut.com/OTHER/ic_dun.png" alt="Badge"> Diverifikasi oleh Play Protect
+      </p>
+    </div>
+  </div>
+
+  <div class="info">
+    <div class="info__view__wrap">
+      <div class="info__view">
+        <div class="info__view-value">4.9
+          <svg class="rating-star" viewBox="0 0 24 24"><path fill="currentColor" d="m12 17.3-6.2 3.7 1.6-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.4 4.8 1.6 7z"/></svg>
+        </div>
+        <div class="info__view-label">21rb+ ulasan</div>
+      </div>
+      <div class="info__view">
+        <div class="info__view-value">2jt+</div>
+        <div class="info__view-label">Download</div>
+      </div>
+      <div class="info__view">
+        <img class="info__view-badge" src="https://img.ligasumut.com/OTHER/ic_editors_choice.png" alt="Pilihan Editor" loading="lazy">
+        <div class="info__view-label">Pilihan Editor</div>
+      </div>
+      <div class="info__view">
+        <img class="info__view-icon" src="https://img.ligasumut.com/OTHER/ic_rated.png" alt="Rating 18+" loading="lazy">
+        <div class="info__view-label">Rating 18+</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="install-btn shiny-btn" id="install-btn">
+    <div class="install-btn__ing">
+      <div class="install-btn__ing__rapid">
+        <svg class="install-lightning" viewBox="0 0 24 24"><path fill="currentColor" d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        <span>Instal Cepat</span>
+      </div>
+      <div class="install-btn__ing__countdown">Download dalam <span class="countdown-num">10</span> s</div>
+    </div>
+    <div class="install-btn__play install-btn__view">Mainkan</div>
+    <div class="install-btn__install install-btn__view">⚡ Instal Cepat</div>
+    <div class="install-btn__ready install-btn__view">Ketuk untuk Instal</div>
+    <div class="install-btn__installing install-btn__view">Menginstal...</div>
+  </div>
+
+  <div class="share-row">
+    <div class="share-row__item">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18 16a3 3 0 0 0-2.2 1l-7-4a3 3 0 0 0 0-2l7-4A3 3 0 1 0 15 4a3 3 0 0 0 .1.7l-7 4a3 3 0 1 0 0 4.6l7 4a3 3 0 1 0 2.9-3.3z"/></svg>
+      <div>Bagikan</div>
+    </div>
+    <div class="share-row__item">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M17 3H7a2 2 0 0 0-2 2v16l7-3 7 3V5a2 2 0 0 0-2-2z"/></svg>
+      <div>Tambah ke wishlist</div>
+    </div>
+  </div>
+
+  <div class="shots">
+    <div class="shots__list">
+      <div class="shots__item"><img data-app-icon-alt alt="Screenshot 1" loading="lazy"></div>
+      <div class="shots__item"><img data-app-icon-alt alt="Screenshot 2" loading="lazy"></div>
+      <div class="shots__item"><img data-app-icon-alt alt="Screenshot 3" loading="lazy"></div>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panel__head">
+      <h2 class="panel__title">Tentang aplikasi ini</h2>
+      <svg class="panel__arrow" viewBox="0 0 24 24"><path fill="currentColor" d="M9 6l6 6-6 6z"/></svg>
+    </div>
+    <p class="panel__text">Akses cepat BONUS138 langsung dari layar utama, tanpa unduhan besar dan tanpa toko aplikasi. Sekali pasang, langsung terbuka seperti aplikasi biasa untuk pengalaman bermain yang lebih mulus.</p>
+    <div class="chips">
+      <span class="chip">BONUS138</span>
+      <span class="chip">Hiburan</span>
+      <span class="chip">Cepat</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel__head">
+      <h2 class="panel__title">Diperbarui pada</h2>
+    </div>
+    <p class="panel__text" id="updatedOn">19 Agustus 2026</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel__head">
+      <h2 class="panel__title">Keamanan data</h2>
+      <svg class="panel__arrow" viewBox="0 0 24 24"><path fill="currentColor" d="M9 6l6 6-6 6z"/></svg>
+    </div>
+    <p class="panel__text">Keamanan dimulai dari memahami cara data kamu dikumpulkan dan dibagikan. BONUS138 menjaga kerahasiaan data membernya dan tidak membagikan data pribadi ke pihak ketiga.</p>
+    <ul class="safety">
+      <li>
+        <img alt="" loading="lazy" src="https://dewi11.appsinplaystore.com/public/assets/vendor/roibest/images/ic_data_share-0a04b46579b65b109794.png">
+        <div class="safety-content">
+          <p>Tidak ada data yang dibagikan kepada pihak ketiga</p>
+          <p class="learn-more"><ins>Pelajari lebih lanjut</ins> tentang cara developer mendeklarasikan berbagi</p>
+        </div>
+      </li>
+      <li>
+        <img alt="" loading="lazy" src="https://dewi11.appsinplaystore.com/public/assets/vendor/roibest/images/ic_cloud_upload-12904a12c1aa88f2d082.png">
+        <div class="safety-content">
+          <p>Aplikasi ini dapat mengumpulkan jenis data ini Lokasi, Aktivitas aplikasi, dan 2 lainnya</p>
+        </div>
+      </li>
+      <li>
+        <img alt="" loading="lazy" src="https://dewi11.appsinplaystore.com/public/assets/vendor/roibest/images/ic_lock-216fc77ae7e0db5800f3.png">
+        <div class="safety-content">
+          <p>Data dienkripsi saat dalam pengiriman</p>
+        </div>
+      </li>
+      <li>
+        <img alt="" loading="lazy" src="https://dewi11.appsinplaystore.com/public/assets/vendor/roibest/images/ic_delete-bfa3513105268d92d830.png">
+        <div class="safety-content">
+          <p>Anda dapat meminta agar data dihapus</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel__head">
+      <h2 class="panel__title">Rating dan ulasan</h2>
+    </div>
+
+    <p class="comments__tips">
+      Rating dan ulasan diverifikasi dan berasal dari orang yang menggunakan jenis perangkat yang sama dengan Anda
+    </p>
+
+    <div class="comments__type">
+      <div class="comments__type-item comments__type-active">
+        <img loading="lazy" src="https://dewi11.appsinplaystore.com/public/assets/vendor/roibest/images/ic_phone-7de36d2d9891b9ea7367.png" alt="">
+        Telepon
+      </div>
+      <div class="comments__type-item">
+        <img loading="lazy" src="https://dewi11.appsinplaystore.com/public/assets/vendor/roibest/images/ic_tablet-398a96a32c0c16db8558.png" alt="">
+        Tablet
+      </div>
+    </div>
+
+    <div class="ratings">
+      <div class="ratings__score">
+        <div class="ratings__number">4.9</div>
+        <div class="ratings__stars">★★★★★</div>
+        <div class="ratings__count">21239132</div>
+      </div>
+      <div class="ratings__bars">
+        <div class="ratings__bar"><span>5</span><i><b style="width:85%"></b></i></div>
+        <div class="ratings__bar"><span>4</span><i><b style="width:10%"></b></i></div>
+        <div class="ratings__bar"><span>3</span><i><b style="width:3%"></b></i></div>
+        <div class="ratings__bar"><span>2</span><i><b style="width:1%"></b></i></div>
+        <div class="ratings__bar"><span>1</span><i><b style="width:1%"></b></i></div>
+      </div>
+    </div>
+
+    <div class="comments__list">
+
+      <div class="comments__list-item">
+        <div class="comments__list-header">
+          <img loading="lazy" class="comments__list-avatar" src="https://img.ligasumut.com/OTHER/default_avatar.png" alt="">
+          <div class="comments__list-name">Bagus Pratama</div>
+          <svg class="comments__list-more" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+        </div>
+        <div class="comments__list-stars">
+          <img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt="">
+          <span>15 Agustus 2026</span>
+        </div>
+        <div class="comments__list-detail">
+          BONUS138 benar-benar juara! Proses deposit dan withdraw super cepat, bonus new member langsung masuk, dan aplikasinya ringan dibuka langsung dari layar utama. Sangat direkomendasikan!
+        </div>
+      </div>
+
+      <div class="comments__list-item">
+        <div class="comments__list-header">
+          <img loading="lazy" class="comments__list-avatar" src="https://img.ligasumut.com/OTHER/default_avatar.png" alt="">
+          <div class="comments__list-name">Siti Rahayu</div>
+          <svg class="comments__list-more" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+        </div>
+        <div class="comments__list-stars">
+          <img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt="">
+          <span>10 Agustus 2026</span>
+        </div>
+        <div class="comments__list-detail">
+          Sejak pakai BONUS138 main jadi jauh lebih nyaman. Tampilannya rapi, loginnya gampang, dan CS-nya ramah 24 jam. Bonus mingguannya bikin makin betah, mantap!
+        </div>
+      </div>
+
+      <div class="comments__list-item">
+        <div class="comments__list-header">
+          <img loading="lazy" class="comments__list-avatar" src="https://img.ligasumut.com/OTHER/default_avatar.png" alt="">
+          <div class="comments__list-name">Dimas Saputra</div>
+          <svg class="comments__list-more" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+        </div>
+        <div class="comments__list-stars">
+          <img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt="">
+          <span>3 Agustus 2026</span>
+        </div>
+        <div class="comments__list-detail">
+          Aplikasi BONUS138 mantap, sekali pasang langsung terbuka seperti apk asli. Loadingnya kencang, aman, dan bonus cashback-nya lumayan besar. Recommended banget buat semua member!
+        </div>
+      </div>
+
+      <div class="comments__list-item">
+        <div class="comments__list-header">
+          <img loading="lazy" class="comments__list-avatar" src="https://img.ligasumut.com/OTHER/default_avatar.png" alt="">
+          <div class="comments__list-name">Rina Anggraini</div>
+          <svg class="comments__list-more" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+        </div>
+        <div class="comments__list-stars">
+          <img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt=""><img src="https://img.ligasumut.com/OTHER/ic_full_star.png" alt="">
+          <span>28 Juli 2026</span>
+        </div>
+        <div class="comments__list-detail">
+          Suka banget sama BONUS138, aksesnya praktis tinggal ketuk ikon di HP. Transaksi lancar tanpa kendala dan banyak promo menarik setiap hari. Pokoknya top!
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="rb-menus__placeholder"></div>
+<div class="rb-menus__body">
+  <div class="rb-menus__item active">
+    <img src="https://img.ligasumut.com/OTHER/ic_menu_games.png" alt="Games" loading="lazy">
+    <div class="title">Games</div>
+  </div>
+  <div class="rb-menus__item">
+    <img src="https://img.ligasumut.com/OTHER/ic_menu_apps.png" alt="Apps" loading="lazy">
+    <div class="title">Apps</div>
+  </div>
+  <div class="rb-menus__item">
+    <img src="https://img.ligasumut.com/OTHER/ic_menu_avt.png" alt="Movies &amp; TV" loading="lazy">
+    <div class="title">Movies &amp; TV</div>
+  </div>
+  <div class="rb-menus__item">
+    <img src="https://img.ligasumut.com/OTHER/ic_menu_books.png" alt="Books" loading="lazy">
+    <div class="title">Books</div>
+  </div>
+  <div class="rb-menus__item">
+    <img src="https://img.ligasumut.com/OTHER/ic_menu_children.png" alt="Kids" loading="lazy">
+    <div class="title">Kids</div>
+  </div>
+</div>
+
+<!-- Lightbox untuk screenshot -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var overlay = document.createElement("div");
+  overlay.className = "image-preview-overlay";
+  overlay.innerHTML = '<button class="image-preview-close" type="button" aria-label="Tutup">&times;</button><img src="" alt="Preview">';
+  document.body.appendChild(overlay);
+  var previewImage = overlay.querySelector("img");
+  var closeButton = overlay.querySelector(".image-preview-close");
+  document.querySelectorAll(".shots__item img").forEach(function (img) {
+    img.addEventListener("click", function () {
+      previewImage.src = this.currentSrc || this.src;
+      previewImage.alt = this.alt || "Preview image";
+      overlay.classList.add("active");
+      document.body.style.overflow = "hidden";
+    });
+  });
+  function closePreview() {
+    overlay.classList.remove("active");
+    previewImage.src = "";
+    document.body.style.overflow = "";
+  }
+  closeButton.addEventListener("click", closePreview);
+  overlay.addEventListener("click", function (e) { if (e.target === overlay) closePreview(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePreview(); });
+});
+</script>
+
+<!-- Logika utama tombol instal (INSTALL -> INSTALLING -> PLAY) -->
+<script>
+(function () {
+  'use strict';
+
+  var TARGET_URL = typeof window.__INSTALL_TARGET_URL__ === 'string' ? window.__INSTALL_TARGET_URL__.trim() : '';
+  var INSTALLED_KEY = 'pwa_installed_' + location.hostname + '_bonus138';
+  var LOADING_MS = 10000;
+  var TICK_MS = 80;
+  var MAX_WAIT_FOR_PROMPT_MS = 5000;
+
+  var appName = (function () {
+    var node = document.querySelector('[data-value="app_name"]');
+    return node && node.textContent ? node.textContent.trim() : document.title;
+  })();
+
+  function byId(id) { return document.getElementById(id); }
+  function container() { return byId('container'); }
+  function getType() { var c = container(); return c ? c.getAttribute('data-type') : null; }
+  function setType(t) { var c = container(); if (c) c.setAttribute('data-type', t); }
+
+  (function () {
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta && meta.content) document.documentElement.style.setProperty('--theme-color', meta.content);
+  })();
+
+  // Ikon & screenshot diambil dari manifest (icons/ lokal) supaya cukup edit manifest.
+  (function () {
+    var link = document.querySelector('link[rel="manifest"]');
+    var img = document.querySelector('[data-app-icon]');
+    var fallback = document.querySelector('[data-icon-fallback]');
+    if (!link || typeof fetch !== 'function') return;
+    fetch(link.href, { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (manifest) {
+        var icons = (manifest && manifest.icons) || [];
+        if (!icons.length) return;
+        var best = icons.slice().sort(function (a, b) { return size(b) - size(a); })[0];
+        if (!best || !best.src) return;
+        if (img) {
+          img.onload = function () { img.hidden = false; if (fallback) fallback.hidden = true; };
+          img.src = best.src;
+        }
+        Array.prototype.forEach.call(document.querySelectorAll('[data-app-icon-alt]'), function (node) {
+          node.src = best.src;
+        });
+      })
+      .catch(function () {});
+    function size(icon) { return parseInt(String((icon && icon.sizes) || '0'), 10) || 0; }
+  })();
+
+  var deferredPrompt = null;
+  var pageLoadTime = Date.now();
+  var feedbackTimer = null;
+  var tickTimer = null;
+  var state = { locked: false, waiting: false, installed: false, swReady: false, countdownDone: false, promptWaited: false };
+
+  function setHint(text) {
+    var el = byId('installLineHint');
+    if (!el) return;
+    el.textContent = text || '';
+    el.style.display = text ? 'block' : 'none';
+  }
+  function setProgress(p) {
+    var el = byId('installProgress');
+    if (el) el.textContent = String(Math.max(0, Math.min(100, Math.round(p)))) + '%';
+  }
+  function setCountdown(seconds) {
+    var el = document.querySelector('#install-btn .countdown-num');
+    if (el) el.textContent = String(Math.max(0, Math.ceil(seconds)));
+  }
+  function clearTick() { if (tickTimer !== null) { window.clearInterval(tickTimer); tickTimer = null; } }
+
+  function startLoading() {
+    clearTick();
+    setType('INSTALLING');
+    setProgress(0);
+    setCountdown(LOADING_MS / 1000);
+    setHint('');
+    return new Promise(function (resolve) {
+      var startedAt = Date.now();
+      tickTimer = window.setInterval(function () {
+        var elapsed = Date.now() - startedAt;
+        setProgress(Math.min(100, (elapsed / LOADING_MS) * 100));
+        setCountdown((LOADING_MS - elapsed) / 1000);
+        if (elapsed >= LOADING_MS) { setProgress(100); setCountdown(0); clearTick(); resolve(); }
+      }, TICK_MS);
+    });
+  }
+
+  function resetToInstall() { clearTick(); setType('INSTALL'); setProgress(0); setCountdown(LOADING_MS / 1000); }
+  function setToPlay() { clearTick(); setType('PLAY'); setProgress(100); setCountdown(0); }
+
+  function feedbackEl() { return byId('pwa-feedback'); }
+  function hideFeedback() {
+    var el = feedbackEl();
+    if (!el) return;
+    if (feedbackTimer !== null) { window.clearTimeout(feedbackTimer); feedbackTimer = null; }
+    el.classList.remove('pwa-feedback--show', 'pwa-feedback--loading', 'pwa-feedback--guide');
+    el.innerHTML = '';
+  }
+  function showFeedback(message, ms) {
+    var el = feedbackEl();
+    if (!el) return;
+    hideFeedback();
+    el.textContent = message;
+    el.classList.add('pwa-feedback--show');
+    feedbackTimer = window.setTimeout(hideFeedback, ms > 0 ? ms : 6000);
+  }
+  function showLoadingOverlay(ms) {
+    var el = feedbackEl();
+    if (!el) return;
+    hideFeedback();
+    el.innerHTML = '<div class="pwa-feedback__backdrop" aria-hidden="true"></div>' +
+      '<div class="pwa-feedback__loadingPanel"><span class="pwa-feedback__spinner" aria-hidden="true"></span></div>';
+    el.classList.add('pwa-feedback--show', 'pwa-feedback--loading');
+    feedbackTimer = window.setTimeout(hideFeedback, ms > 0 ? ms : 2000);
+  }
+  function showIosGuide() {
+    var el = feedbackEl();
+    if (!el) return;
+    hideFeedback();
+    el.innerHTML =
+      '<div class="pwa-feedback__backdrop" data-ios-guide-close="1" aria-hidden="true"></div>' +
+      '<div class="pwa-feedback__guidePanel" role="dialog" aria-modal="true">' +
+      '<button class="pwa-feedback__guideClose" type="button" data-ios-guide-close="1" aria-label="Tutup">&times;</button>' +
+      '<div class="pwa-feedback__guideTop"><div class="pwa-feedback__guideIcon" aria-hidden="true">+</div><div>' +
+      '<p class="pwa-feedback__guideTitle" id="iosGuideTitle"></p>' +
+      '<p class="pwa-feedback__guideText">Ikuti langkah iPhone ini agar shortcut muncul seperti aplikasi.</p></div></div>' +
+      '<div class="pwa-feedback__guideSteps">' +
+      '<div class="pwa-feedback__guideStep"><span class="pwa-feedback__guideNum">1</span><span class="pwa-feedback__guideStepText">Ketuk tombol <strong>Bagikan</strong> di Safari.</span></div>' +
+      '<div class="pwa-feedback__guideStep"><span class="pwa-feedback__guideNum">2</span><span class="pwa-feedback__guideStepText">Pilih <strong>Tambahkan ke Layar Utama</strong>.</span></div>' +
+      '<div class="pwa-feedback__guideStep"><span class="pwa-feedback__guideNum">3</span><span class="pwa-feedback__guideStepText">Tekan <strong>Tambah</strong>, lalu buka dari layar utama.</span></div>' +
+      '</div><p class="pwa-feedback__guideHint">Jika menu Bagikan tidak muncul, buka halaman ini lewat Safari terlebih dahulu.</p></div>';
+    var title = el.querySelector('#iosGuideTitle');
+    if (title) title.textContent = 'Tambahkan ' + appName + ' ke layar utama';
+    el.classList.add('pwa-feedback--show', 'pwa-feedback--guide');
+  }
+
+  function detectPlatform() {
+    var ua = navigator.userAgent;
+    if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ios';
+    if (/FBAN|FBAV|Instagram|LinkedInApp|Telegram|WhatsApp|Viber|Line\//i.test(ua)) return 'in-app-browser';
+    if (/Firefox/i.test(ua) && !/Seamonkey/i.test(ua)) return 'firefox';
+    if (/SamsungBrowser/i.test(ua)) return 'samsung';
+    if (/Android/i.test(ua) && /Chrome|Edg/i.test(ua)) return 'android-chromium';
+    if (/Chrome|Edg/i.test(ua)) return 'desktop-chromium';
+    return 'unknown';
+  }
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+  function markInstalled() { try { localStorage.setItem(INSTALLED_KEY, '1'); } catch (e) {} }
+  function isMarkedInstalled() { try { return localStorage.getItem(INSTALLED_KEY) === '1'; } catch (e) { return false; } }
+
+  function tryTransitionToPlay() {
+    if (!state.waiting) return;
+    if (!state.installed || !state.swReady || !state.countdownDone) { setHint(''); return; }
+    state.waiting = false;
+    state.countdownDone = false;
+    state.locked = false;
+    markInstalled();
+    setToPlay();
+    setHint('');
+  }
+
+  window.addEventListener('beforeinstallprompt', function (event) {
+    event.preventDefault();
+    deferredPrompt = event;
+    try { localStorage.removeItem(INSTALLED_KEY); } catch (e) {}
+    if (getType() !== 'PLAY') resetToInstall();
+    setHint('Siap - ketuk instal');
+  });
+
+  window.addEventListener('appinstalled', function () {
+    deferredPrompt = null;
+    state.installed = true;
+    if (getType() !== 'PLAY') tryTransitionToPlay();
+  });
+
+  function promptInstall() {
+    var promptEvent = deferredPrompt;
+    deferredPrompt = null;
+    hideFeedback();
+    promptEvent.prompt();
+    promptEvent.userChoice
+      .then(function (choice) {
+        if (choice.outcome === 'accepted') {
+          state.waiting = true;
+          state.installed = false;
+          state.countdownDone = false;
+          startLoading().then(function () { state.countdownDone = true; tryTransitionToPlay(); });
+          setHint('');
+        } else {
+          resetToInstall();
+          state.locked = false;
+          setHint('Siap - ketuk instal');
+        }
+      })
+      .catch(function () { resetToInstall(); state.locked = false; showFeedback('Gagal. Coba lagi.', 4000); });
+  }
+
+  function noPromptFeedback() {
+    var platform = detectPlatform();
+    if (platform === 'ios') { setHint('Tambah ke layar utama'); showIosGuide(); return; }
+    if (platform === 'in-app-browser') { setHint('Buka di browser'); showFeedback('Buka halaman ini di Chrome atau Safari.', 5000); return; }
+    if (platform === 'firefox') { setHint('Chrome / Edge'); showFeedback('Gunakan Chrome atau Edge.', 4000); return; }
+    if (platform === 'desktop-chromium') { setHint('Buka di ponsel'); showFeedback('Buka alamat ini di Chrome pada ponsel kamu.', 5000); return; }
+    if (!state.swReady) { setHint('Memuat...'); showFeedback('Masih memuat. Coba lagi sebentar.', 4000); return; }
+    setHint('Coba lagi');
+    showFeedback('Coba Chrome (tab normal) atau menu \u22EE lalu Instal.', 5000);
+  }
+
+  function onInstallClick() {
+    if (getType() === 'PLAY') { window.location.assign(TARGET_URL || '/'); return; }
+    if (detectPlatform() === 'ios' && !isStandalone()) { setHint('Tambah ke layar utama'); showIosGuide(); return; }
+    if (state.locked) return;
+    state.locked = true;
+    if (!deferredPrompt) {
+      var since = Date.now() - pageLoadTime;
+      if (since < MAX_WAIT_FOR_PROMPT_MS && !state.promptWaited) {
+        state.promptWaited = true;
+        showLoadingOverlay(4000);
+        state.locked = false;
+        window.setTimeout(function () { if (deferredPrompt) onInstallClick(); else noPromptFeedback(); }, 2000);
+        return;
+      }
+      noPromptFeedback();
+      state.locked = false;
+      return;
+    }
+    promptInstall();
+  }
+
+  document.addEventListener('click', function (event) {
+    var node = event.target;
+    while (node && node !== document) {
+      if (node.getAttribute && node.getAttribute('data-ios-guide-close') === '1') { hideFeedback(); return; }
+      node = node.parentNode;
+    }
+  });
+
+  var installBtn = byId('install-btn');
+  if (installBtn) installBtn.addEventListener('click', onInstallClick, true);
+
+  function init() {
+    if (isStandalone()) { markInstalled(); setToPlay(); }
+    else if (isMarkedInstalled()) { setToPlay(); }
+    else if ('getInstalledRelatedApps' in navigator) {
+      navigator.getInstalledRelatedApps().then(function (apps) {
+        if (apps && apps.length > 0) { markInstalled(); setToPlay(); }
+      }).catch(function () {});
+    }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(function () { state.swReady = true; tryTransitionToPlay(); }).catch(function () {});
+    }
+  }
+
+  if (document.readyState === 'complete') init();
+  else window.addEventListener('load', init);
+})();
+</script>
+
+<!-- Registrasi service worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register("sw.js", { scope: "./" })
+      .catch(function (error) { console.warn('Service worker registration failed:', error); });
+  });
+}
+</script>
+</body>
+</html>
